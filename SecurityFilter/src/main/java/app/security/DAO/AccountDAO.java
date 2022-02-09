@@ -1,6 +1,6 @@
 package app.security.DAO;
 
-import app.security.DTO.Account;
+import app.security.Entity.Account;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AccountDAO {

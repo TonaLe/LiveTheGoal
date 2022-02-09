@@ -1,6 +1,6 @@
 package app.security.DAO;
 
-import app.security.DTO.Account;
+import app.security.Entity.Account;
 import app.security.DTO.ApplicationUser;
 import app.security.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;

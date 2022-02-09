@@ -1,10 +1,14 @@
-package app.security.DTO;
+package app.security.Entity;
 
 import lombok.*;
+import org.apache.kafka.common.header.Headers;
+import org.apache.kafka.common.serialization.Serializer;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Map;
 
 @Builder
 @NoArgsConstructor
@@ -12,7 +16,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity(name = "Account")
-public class Account {
+public class Account implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -40,9 +44,11 @@ public class Account {
 
     @Column(name = "createdAt")
     @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
     private String createdAt;
 
     @Column(name = "modifiedAt")
     @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
     private String modifiedAt;
 }

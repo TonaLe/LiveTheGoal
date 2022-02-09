@@ -1,7 +1,7 @@
 package app.security.Service;
 
 import app.security.DAO.AccountDAO;
-import app.security.DTO.Account;
+import app.security.Entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

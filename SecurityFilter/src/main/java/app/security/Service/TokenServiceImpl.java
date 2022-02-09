@@ -8,6 +8,8 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -18,9 +20,11 @@ public class TokenServiceImpl implements TokenService {
     private final String SECRECT_KEY = "SECRET";
     private final String USERNAME = "Username";
     private final int EXPIRED_TIME = 86400000;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     public String generateToken(final String username){
         String token = null;
+        LOG.info("Generating token: ");
         try{
             JWSSigner signer = new MACSigner(generateSharedSecrect());
             JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
@@ -31,7 +35,7 @@ public class TokenServiceImpl implements TokenService {
             signJWT.sign(signer);
             token = signJWT.serialize();
         } catch (JOSEException e) {
-            e.printStackTrace();
+            LOG.error(String.format("Token cannot be generated due to %s", e));
         }
         return token;
     }
@@ -48,6 +52,7 @@ public class TokenServiceImpl implements TokenService {
 
     public JWTClaimsSet getClaimFromToken(String token) throws ParseException, JOSEException {
         JWTClaimsSet claimsSet = null;
+        LOG.info("Get claim from token: ");
         final SignedJWT signer = SignedJWT.parse(token);
         final MACVerifier verifier = new MACVerifier(generateSharedSecrect());
         if(signer.verify(verifier)){

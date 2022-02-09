@@ -3,6 +3,8 @@ package app.security.Filter;
 import app.security.Service.AccountService;
 import app.security.Service.TokenServiceImpl;
 import com.nimbusds.jose.JOSEException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +27,13 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
     @Autowired
     private AccountService accountService;
     private static final String HEADER = "Authorization";
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         String authToken = request.getHeader(HEADER);
+        LOG.info("Get username from token: ");
         try {
             if(token.validateTokenLogin(authToken)){
                 String username = token.getUserNameFromToken(authToken);
@@ -40,7 +44,7 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         } catch (ParseException | JOSEException e) {
-            e.printStackTrace();
+            LOG.error(String.format("Cannot authenticate because of %s", e));
         }
         chain.doFilter(req,res);
     }

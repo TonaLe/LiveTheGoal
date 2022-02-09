@@ -33,6 +33,10 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         String authToken = request.getHeader(HEADER);
+        if (authToken == null) {
+            LOG.info("There is no token to get");
+            return;
+        }
         LOG.info("Get username from token: ");
         try {
             if(token.validateTokenLogin(authToken)){

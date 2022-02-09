@@ -42,7 +42,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         String authToken = token.generateToken(username);
         response.addHeader("Authorization",authToken);
 //        response.sendRedirect("/login");
-//        super.successfulAuthentication(request, response, chain, authResult);
+        super.successfulAuthentication(request, response, chain, authResult);
     }
 
     @Override

@@ -13,6 +13,8 @@ import static app.security.Enum.UserRole.USER;
 
 @Repository
 public class AccountDaoImp implements AccountDAO {
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired

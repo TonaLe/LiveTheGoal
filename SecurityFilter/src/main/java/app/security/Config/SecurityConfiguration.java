@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static app.security.Enum.UserRole.ADMIN;
@@ -22,10 +23,13 @@ import static app.security.Enum.UserRole.ADMIN;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final AccountServiceImpl accountService;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public SecurityConfiguration(AccountServiceImpl accountService) {
+    public SecurityConfiguration(AccountServiceImpl accountService, final PasswordEncoder passwordEncoder) {
         this.accountService = accountService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -39,14 +43,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                csrf().disable()
                .authorizeRequests()
                .antMatchers("/Todo/").hasRole(ADMIN.name())
-               .antMatchers("/").permitAll()
                .anyRequest()
                .authenticated()
                .and()
                .formLogin()
                .loginPage("/login").permitAll()
                .and()
-               .addFilterBefore(new JWTLoginFilter("/Admin/course",authenticationManager())
+               .addFilterBefore(new JWTLoginFilter("/",authenticationManager())
                        , UsernamePasswordAuthenticationFilter.class)
                .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
                .headers().frameOptions().disable();
@@ -55,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider daoauthenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(10));
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(accountService);
         return daoAuthenticationProvider;
     }

@@ -17,7 +17,7 @@ import java.util.Date;
 
 @Service
 public class TokenServiceImpl implements TokenService {
-    private final String SECRECT_KEY = "SECRET";
+    private final String SECRECT_KEY = "secret01234567890ABCDEFGHIJKLMNO";
     private final String USERNAME = "Username";
     private final int EXPIRED_TIME = 86400000;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());

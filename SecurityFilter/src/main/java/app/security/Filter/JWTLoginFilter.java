@@ -2,6 +2,7 @@ package app.security.Filter;
 
 
 import app.security.Service.TokenServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import java.util.Collections;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
+    private static final String HEADER = "Authorization";
 
     public JWTLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
@@ -29,10 +31,14 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,
                                                 HttpServletResponse httpServletResponse)
             throws AuthenticationException, IOException, ServletException {
-        UsernamePasswordAuthenticationToken authToken = new
-                UsernamePasswordAuthenticationToken(httpServletRequest.getParameter("username"),
-                httpServletRequest.getParameter("password"), Collections.emptyList());
-        return getAuthenticationManager().authenticate(authToken);
+        String bearerToken = httpServletRequest.getHeader(HEADER);
+        if (StringUtils.isEmpty(bearerToken)) {
+            UsernamePasswordAuthenticationToken authToken = new
+                    UsernamePasswordAuthenticationToken(httpServletRequest.getParameter("username"),
+                    httpServletRequest.getParameter("password"), Collections.emptyList());
+            return getAuthenticationManager().authenticate(authToken);
+        }
+        return null;
     }
 
     @Override
@@ -41,8 +47,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         TokenServiceImpl token = new TokenServiceImpl();
         String authToken = token.generateToken(username);
         response.addHeader("Authorization",authToken);
-//        response.sendRedirect("/login");
-        super.successfulAuthentication(request, response, chain, authResult);
     }
 
     @Override

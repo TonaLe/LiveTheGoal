@@ -42,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
        http.
                csrf().disable()
                .authorizeRequests()
+               .antMatchers("/signup").permitAll()
                .antMatchers("/Todo/").hasRole(ADMIN.name())
                .anyRequest()
                .authenticated()
@@ -49,9 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                .formLogin()
                .loginPage("/login").permitAll()
                .and()
-               .addFilterBefore(new JWTLoginFilter("/",authenticationManager())
-                       , UsernamePasswordAuthenticationFilter.class)
-               .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
+               .addFilter(getAuthenticationFilter())
+               .addFilter(getAuthorizeFilter())
                .headers().frameOptions().disable();
     }
 
@@ -64,9 +64,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public TokenFilter tokenFilter() throws Exception {
+    public TokenFilter getAuthorizeFilter() throws Exception {
         TokenFilter token = new TokenFilter();
         token.setAuthenticationManager(authenticationManager());
         return token;
+    }
+
+    @Bean
+    public JWTLoginFilter getAuthenticationFilter() throws Exception {
+        return new JWTLoginFilter("/", authenticationManager());
     }
 }

@@ -1,5 +1,6 @@
 package app.security.Entity;
 
+import app.security.Enum.Role;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,7 +39,8 @@ public class Account implements Serializable {
     private String email;
 
     @Column(name = "role")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "createdAt")
     @CreatedDate

@@ -18,10 +18,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * The type Jwt login filter.
+ */
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
+    /**
+     * The constant HEADER.
+     */
     private static final String HEADER = "Authorization";
 
+    /**
+     * Instantiates a new Jwt login filter.
+     *
+     * @param defaultFilterProcessesUrl the default filter processes url
+     * @param authenticationManager     the authentication manager
+     */
     public JWTLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
         setAuthenticationManager(authenticationManager);

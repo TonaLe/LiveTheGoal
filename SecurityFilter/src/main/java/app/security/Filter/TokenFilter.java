@@ -21,19 +21,41 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 
+/**
+ * The type Token filter.
+ */
 public class TokenFilter extends UsernamePasswordAuthenticationFilter {
+
+    /**
+     * The Token.
+     */
     @Autowired
     private TokenServiceImpl token;
 
+    /**
+     * The Account service.
+     */
     @Autowired
     private AccountService accountService;
+
+    /**
+     * The constant HEADER.
+     */
     private static final String HEADER = "Authorization";
+
+    /**
+     * The constant BEARER.
+     */
     private static final String BEARER = "Bearer";
+
+    /**
+     * The Log.
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
+        final HttpServletRequest request = (HttpServletRequest) req;
         final String authToken = request.getHeader(HEADER);
 
         if (authToken == null) {
@@ -47,7 +69,12 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
             if(token.validateTokenLogin(bearerToken)){
                 String username = token.getUserNameFromToken(bearerToken);
                 UserDetails user =  accountService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+
+                if (user == null) {
+                    return;
+                }
+
+                final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -57,8 +84,4 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
         }
         chain.doFilter(req,res);
     }
-
-
-
-
 }

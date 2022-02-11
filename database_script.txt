@@ -1,0 +1,131 @@
+CREATE database LiveTheGoal;
+
+use LiveTheGoal;
+
+CREATE TABLE Account (
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+username VARCHAR(50) NOT NULL UNIQUE,
+password VARCHAR(200) NOT NULL,
+firstName VARCHAR(50) NOT NULL,
+lastName VARCHAR(50) NOT NULL,
+msisdn VARCHAR(15) NOT NULL,
+email VARCHAR(50) NOT NULL UNIQUE,
+role VARCHAR(50) NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+);
+
+CREATE TABLE AccountDetail (
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+accountId int NOT NULL UNIQUE,
+CONSTRAINT FK_Account FOREIGN KEY (accountId) REFERENCES Account(id),
+address VARCHAR(50) NOT NULL, 
+city VARCHAR(20) NOT NULL,
+country VARCHAR(10) NOT NULL,
+msisdn VARCHAR(20) NOT NULL
+)
+
+CREATE TABLE UserPayment(
+id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+accountId int NOT NULL UNIQUE,
+CONSTRAINT FK_AccountPayment FOREIGN KEY (accountId) REFERENCES Account(id),
+paymentType VARCHAR(15) NOT NULL,
+provider VARCHAR(20),
+accountNo int,
+expiry date
+)
+
+CREATE TABLE ShoppingSession(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+accountId int NOT NULL UNIQUE,
+CONSTRAINT FK_AccountShopping FOREIGN KEY (accountId) REFERENCES Account(id),
+total int NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE ProductCategory(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1), 
+name VARCHAR(20) NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE Brand(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1), 
+name VARCHAR(20) NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE ProductInventory (
+id int NOT NULL PRIMARY KEY IDENTITY(1,1), 
+quantity int NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE Product(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1), 
+name VARCHAR(50) NOT NULL,
+describe VARCHAR(90) NOT NULL,
+SKU VARCHAR(50) NOT NULL UNIQUE,
+categoryId int NOT NULL, 
+CONSTRAINT FK_Category FOREIGN KEY (categoryId) REFERENCES ProductCategory(id),
+inventoryId int NOT NULL, 
+CONSTRAINT FK_Inventory FOREIGN KEY (inventoryId) REFERENCES ProductInventory(id),
+brandId int NOT NULL, 
+CONSTRAINT FK_Brand FOREIGN KEY (brandId) REFERENCES Brand(id),
+price decimal NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE ProductPicture(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1), 
+productId int NOT NULL, 
+CONSTRAINT FK_ProductPic FOREIGN KEY (productId) REFERENCES Product(id),
+name VARCHAR(100) NOT NULL
+)
+
+CREATE TABLE CartItem(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+sessionId int NOT NULL, 
+CONSTRAINT FK_ShoppingSessionCart FOREIGN KEY (sessionId) REFERENCES ShoppingSession(id),
+productId int NOT NULL, 
+CONSTRAINT FK_ProductCart FOREIGN KEY (productId) REFERENCES Product(id),
+quantity int NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE OrderDetails(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+accountId int NOT NULL UNIQUE,
+CONSTRAINT FK_AccountOrder FOREIGN KEY (accountId) REFERENCES Account(id),
+total decimal NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE OrderItems(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+orderId int NOT NULL, 
+CONSTRAINT FK_OrderDetails FOREIGN KEY (orderId) REFERENCES OrderDetails(id),
+productId int NOT NULL, 
+CONSTRAINT FK_ProductItems FOREIGN KEY (productId) REFERENCES Product(id),
+quantity int NOT NULL,
+createdAt DATETIME,
+modifiedAt DATETIME
+)
+
+CREATE TABLE PaymentDetails(
+id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+orderId int NOT NULL, 
+CONSTRAINT FK_OrderDetailsPayment FOREIGN KEY (orderId) REFERENCES OrderDetails(id),
+amount int NOT NULL,
+provider VARCHAR(50),
+status VARCHAR(20),
+createdAt DATETIME,
+modifiedAt DATETIME
+)

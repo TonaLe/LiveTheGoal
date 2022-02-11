@@ -3,9 +3,7 @@ package app.security.Service;
 
 import app.security.Entity.Account;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface AccountService extends UserDetailsService {
 
     void setAccount(Account account);

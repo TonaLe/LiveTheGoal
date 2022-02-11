@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import static app.security.Enum.UserPermission.SUBJECT_READ;
 import static app.security.Enum.UserPermission.SUBJECT_WRITE;
 
-public enum UserRole {
+public enum UserAuthorities {
     ADMIN(Sets.newHashSet(SUBJECT_READ,SUBJECT_WRITE)),
     USER(Sets.newHashSet(SUBJECT_READ));
 
     private Set<UserPermission> userPermissions;
 
-    UserRole(Set<UserPermission> userPermissions) {
+    UserAuthorities(Set<UserPermission> userPermissions) {
         this.userPermissions = userPermissions;
     }
 
@@ -28,5 +28,10 @@ public enum UserRole {
                 .map(userPermission -> new SimpleGrantedAuthority(userPermission.getPermission())).collect(Collectors.toSet());
         simpleGrantedAuthority.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return simpleGrantedAuthority;
+    }
+
+    @Override
+    public String toString() {
+        return this.name();
     }
 }

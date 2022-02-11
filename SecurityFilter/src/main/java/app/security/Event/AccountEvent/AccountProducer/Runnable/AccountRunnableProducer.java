@@ -1,4 +1,4 @@
-package app.security.Event.AccountEvent.Runnable;
+package app.security.Event.AccountEvent.AccountProducer.Runnable;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -34,9 +34,9 @@ public class AccountRunnableProducer implements Runnable{
     private final AtomicBoolean STOPPER = new AtomicBoolean(false);
 
     /**
-     * The Stringify account.
+     * The Json account.
      */
-    private final String stringifyAccount;
+    private final String jsonAccount;
 
     /**
      * Instantiates a new Account runnable producer.
@@ -44,14 +44,14 @@ public class AccountRunnableProducer implements Runnable{
      * @param id               the id
      * @param topicName        the topic name
      * @param producer         the producer
-     * @param stringifyAccount the stringify account
+     * @param jsonAccount the stringify account
      */
     public AccountRunnableProducer(final int id, final String topicName, final KafkaProducer<String, String> producer,
-                                   final String stringifyAccount) {
+                                   final String jsonAccount) {
         this.id = id;
         this.topicName = topicName;
         this.producer = producer;
-        this.stringifyAccount = stringifyAccount;
+        this.jsonAccount = jsonAccount;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class AccountRunnableProducer implements Runnable{
         try {
             LOG.info("Starting Account producer - " + id);
             while (!STOPPER.get()) {
-                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), stringifyAccount));
+                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonAccount));
             }
         } catch (Exception e) {
             LOG.error("Exception in Account producer - " + id);
@@ -70,7 +70,7 @@ public class AccountRunnableProducer implements Runnable{
     /**
      * Shutdown.
      */
-    void shutdown() {
+    public void shutdown() {
         LOG.info("Shutting down Account producer - " + id);
         STOPPER.set(true);
     }

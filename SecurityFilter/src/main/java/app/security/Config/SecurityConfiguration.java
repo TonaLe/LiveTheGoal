@@ -12,12 +12,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static app.security.Enum.UserRole.ADMIN;
-
+import static app.security.Enum.UserAuthorities.ADMIN;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
        http.
                csrf().disable()
                .authorizeRequests()
+               .antMatchers("/signup").permitAll()
                .antMatchers("/Todo/").hasRole(ADMIN.name())
                .anyRequest()
                .authenticated()
@@ -49,9 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                .formLogin()
                .loginPage("/login").permitAll()
                .and()
-               .addFilterBefore(new JWTLoginFilter("/",authenticationManager())
-                       , UsernamePasswordAuthenticationFilter.class)
-               .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
+               .addFilter(getAuthenticationFilter())
+               .addFilter(getAuthorizeFilter())
                .headers().frameOptions().disable();
     }
 
@@ -64,9 +61,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public TokenFilter tokenFilter() throws Exception {
+    public TokenFilter getAuthorizeFilter() throws Exception {
         TokenFilter token = new TokenFilter();
         token.setAuthenticationManager(authenticationManager());
         return token;
+    }
+
+    @Bean
+    public JWTLoginFilter getAuthenticationFilter() throws Exception {
+        return new JWTLoginFilter("/", authenticationManager());
     }
 }

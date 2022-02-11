@@ -2,6 +2,7 @@ package app.security.Filter;
 
 
 import app.security.Service.TokenServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,9 +18,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * The type Jwt login filter.
+ */
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
+    /**
+     * The constant HEADER.
+     */
+    private static final String HEADER = "Authorization";
 
+    /**
+     * Instantiates a new Jwt login filter.
+     *
+     * @param defaultFilterProcessesUrl the default filter processes url
+     * @param authenticationManager     the authentication manager
+     */
     public JWTLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
         setAuthenticationManager(authenticationManager);
@@ -29,10 +43,14 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,
                                                 HttpServletResponse httpServletResponse)
             throws AuthenticationException, IOException, ServletException {
-        UsernamePasswordAuthenticationToken authToken = new
-                UsernamePasswordAuthenticationToken(httpServletRequest.getParameter("username"),
-                httpServletRequest.getParameter("password"), Collections.emptyList());
-        return getAuthenticationManager().authenticate(authToken);
+        String bearerToken = httpServletRequest.getHeader(HEADER);
+        if (StringUtils.isEmpty(bearerToken)) {
+            UsernamePasswordAuthenticationToken authToken = new
+                    UsernamePasswordAuthenticationToken(httpServletRequest.getParameter("username"),
+                    httpServletRequest.getParameter("password"), Collections.emptyList());
+            return getAuthenticationManager().authenticate(authToken);
+        }
+        return null;
     }
 
     @Override
@@ -41,8 +59,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         TokenServiceImpl token = new TokenServiceImpl();
         String authToken = token.generateToken(username);
         response.addHeader("Authorization",authToken);
-//        response.sendRedirect("/login");
-        super.successfulAuthentication(request, response, chain, authResult);
     }
 
     @Override

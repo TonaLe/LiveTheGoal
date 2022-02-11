@@ -1,9 +1,7 @@
-package app.security.Event.AccountEvent;
+package app.security.Event.AccountEvent.AccountProducer;
 
 import app.security.Entity.Account;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface AccountEventProducer {
     void sendMessage(final Account account);
 }

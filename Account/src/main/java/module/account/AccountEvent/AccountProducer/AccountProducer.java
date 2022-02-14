@@ -1,9 +1,9 @@
-package app.security.Event.AccountEvent.AccountProducer;
+package module.account.AccountEvent.AccountProducer;
 
-import app.security.Config.AppConfigs;
-import app.security.DTO.AccountDto;
-import app.security.Entity.Account;
-import app.security.Event.AccountEvent.AccountProducer.Runnable.AccountRunnableProducer;
+
+import module.account.AccountEvent.AccountProducer.Runnable.AccountRunnableProducer;
+import module.account.Config.AppConfigs;
+import module.account.DTO.AccountDto;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -16,7 +16,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static app.security.Utils.StringUtils.convertObjectToString;
+import static module.account.Utils.StringUtils.convertObjectToString;
+
 
 /**
  * The type Account producer.

@@ -1,4 +1,4 @@
-package app.security.Event.AccountEvent.AccountProducer.Runnable;
+package module.account.AccountEvent.AccountProducer.Runnable;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -62,7 +62,7 @@ public class AccountRunnableProducer implements Runnable {
                 producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonAccount));
             }
         } catch (Exception e) {
-            LOG.error("Exception in Account producer - " + id);
+            LOG.error(String.valueOf(new IllegalArgumentException("Exception in Account producer - " + id)));
             throw new RuntimeException(e);
         }
     }

@@ -66,22 +66,22 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
         try {
             final String bearerToken = StringUtils.remove(authToken, BEARER).trim();
 
-            if(token.validateTokenLogin(bearerToken)){
+            if (token.validateTokenLogin(bearerToken)) {
                 String username = token.getUserNameFromToken(bearerToken);
-                UserDetails user =  accountService.loadUserByUsername(username);
+                UserDetails user = accountService.loadUserByUsername(username);
 
                 if (user == null) {
                     return;
                 }
 
                 final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         } catch (ParseException | JOSEException e) {
-            LOG.error(String.format("Cannot authenticate because of %s", e));
+            LOG.error(String.valueOf(new IllegalArgumentException("Cannot authenticate because of %s", e)));
         }
-        chain.doFilter(req,res);
+        chain.doFilter(req, res);
     }
 }

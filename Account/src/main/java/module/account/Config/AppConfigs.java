@@ -1,4 +1,4 @@
-package app.security.Config;
+package module.account.Config;
 
 public class AppConfigs {
     public final static String ACCOUNT_CREATION_TOPIC = "Account_Creation_Topic";

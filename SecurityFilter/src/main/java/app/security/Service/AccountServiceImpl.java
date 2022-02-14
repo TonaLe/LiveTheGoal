@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class AccountServiceImpl  implements AccountService, UserDetailsService {
+public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Autowired
     private AccountDAO accountDAO;
 

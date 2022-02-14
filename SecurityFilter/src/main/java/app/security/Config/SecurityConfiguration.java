@@ -13,8 +13,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static app.security.Enum.UserAuthorities.ADMIN;
+import static app.security.Enum.Role.ADMIN;
+
 
 @Configuration
 @EnableWebSecurity
@@ -47,8 +49,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                .formLogin()
                .loginPage("/login").permitAll()
                .and()
-               .addFilter(getAuthenticationFilter())
-               .addFilter(getAuthorizeFilter())
+               .addFilterBefore(new JWTLoginFilter("/",authenticationManager())
+                       , UsernamePasswordAuthenticationFilter.class)
+               .addFilterBefore(getTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                .headers().frameOptions().disable();
     }
 
@@ -61,14 +64,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public TokenFilter getAuthorizeFilter() throws Exception {
+    public TokenFilter getTokenFilter() throws Exception {
         TokenFilter token = new TokenFilter();
         token.setAuthenticationManager(authenticationManager());
         return token;
-    }
-
-    @Bean
-    public JWTLoginFilter getAuthenticationFilter() throws Exception {
-        return new JWTLoginFilter("/", authenticationManager());
     }
 }

@@ -58,7 +58,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         String username = request.getParameter("username");
         TokenServiceImpl token = new TokenServiceImpl();
         String authToken = token.generateToken(username);
-        response.addHeader("Authorization",authToken);
+        response.addHeader("Authorization", authToken);
     }
 
     @Override

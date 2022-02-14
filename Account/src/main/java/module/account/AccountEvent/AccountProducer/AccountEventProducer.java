@@ -1,7 +1,7 @@
-package app.security.Event.AccountEvent.AccountProducer;
+package module.account.AccountEvent.AccountProducer;
 
-import app.security.DTO.AccountDto;
-import app.security.Entity.Account;
+
+import module.account.DTO.AccountDto;
 
 /**
  * The interface Account event producer.

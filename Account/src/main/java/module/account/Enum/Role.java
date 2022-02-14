@@ -1,4 +1,4 @@
-package app.security.Enum;
+package module.account.Enum;
 
 /**
  * The enum Role.

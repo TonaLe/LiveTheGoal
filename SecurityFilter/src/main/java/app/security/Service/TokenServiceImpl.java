@@ -22,41 +22,41 @@ public class TokenServiceImpl implements TokenService {
     private final int EXPIRED_TIME = 86400000;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    public String generateToken(final String username){
+    public String generateToken(final String username) {
         String token = null;
         LOG.info("Generating token: ");
-        try{
+        try {
             JWSSigner signer = new MACSigner(generateSharedSecrect());
             JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
             builder.expirationTime(generateExpiredTime());
-            builder.claim(USERNAME,username);
+            builder.claim(USERNAME, username);
             JWTClaimsSet claimsSet = builder.build();
-            SignedJWT signJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256),claimsSet);
+            SignedJWT signJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
             signJWT.sign(signer);
             token = signJWT.serialize();
         } catch (JOSEException e) {
-            LOG.error(String.format("Token cannot be generated due to %s", e));
+            LOG.error(String.valueOf(new IllegalArgumentException("Token cannot be generated due to %s", e)));
         }
         return token;
     }
 
-    public byte[] generateSharedSecrect(){
+    public byte[] generateSharedSecrect() {
         byte[] share = new byte[32];
         share = SECRECT_KEY.getBytes();
         return share;
     }
 
-    private Date generateExpiredTime(){
-        return new Date(System.currentTimeMillis()+EXPIRED_TIME);
+    private Date generateExpiredTime() {
+        return new Date(System.currentTimeMillis() + EXPIRED_TIME);
     }
 
     public JWTClaimsSet getClaimFromToken(String token) throws ParseException, JOSEException {
         JWTClaimsSet claimsSet = null;
-        LOG.info("Get claim from token: ");
+        LOG.info("Get claim from token: " + token);
         final SignedJWT signer = SignedJWT.parse(token);
         final MACVerifier verifier = new MACVerifier(generateSharedSecrect());
-        if(signer.verify(verifier)){
-            claimsSet =signer.getJWTClaimsSet();
+        if (signer.verify(verifier)) {
+            claimsSet = signer.getJWTClaimsSet();
         }
         return claimsSet;
     }
@@ -78,11 +78,11 @@ public class TokenServiceImpl implements TokenService {
     }
 
     public boolean validateTokenLogin(String token) throws ParseException, JOSEException {
-        if(token == null || token.trim().length() == 0){
+        if (token == null || token.trim().length() == 0) {
             return false;
         }
         String username = getUserNameFromToken(token);
-        if(username == null){
+        if (username == null) {
             return false;
         }
         return !validateExpireDate(token);

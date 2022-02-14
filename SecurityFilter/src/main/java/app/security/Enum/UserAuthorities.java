@@ -10,20 +10,20 @@ import static app.security.Enum.UserPermission.SUBJECT_READ;
 import static app.security.Enum.UserPermission.SUBJECT_WRITE;
 
 public enum UserAuthorities {
-    ADMIN(Sets.newHashSet(SUBJECT_READ,SUBJECT_WRITE)),
+    ADMIN(Sets.newHashSet(SUBJECT_READ, SUBJECT_WRITE)),
     USER(Sets.newHashSet(SUBJECT_READ));
 
-    private Set<UserPermission> userPermissions;
+    private final Set<UserPermission> userPermissions;
 
     UserAuthorities(Set<UserPermission> userPermissions) {
         this.userPermissions = userPermissions;
     }
 
-    public Set<UserPermission> getUserPermissions(){
+    public Set<UserPermission> getUserPermissions() {
         return userPermissions;
     }
 
-    public Set<SimpleGrantedAuthority> getAuthority(){
+    public Set<SimpleGrantedAuthority> getAuthority() {
         Set<SimpleGrantedAuthority> simpleGrantedAuthority = userPermissions.stream()
                 .map(userPermission -> new SimpleGrantedAuthority(userPermission.getPermission())).collect(Collectors.toSet());
         simpleGrantedAuthority.add(new SimpleGrantedAuthority("ROLE_" + this.name()));

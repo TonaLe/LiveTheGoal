@@ -50,16 +50,16 @@ public class AccountDaoImp implements AccountDAO {
         this.accountRepository = accountRepository;
     }
 
-    public void setAccount(Account account){
+    public void setAccount(Account account) {
         accountRepository.save(account);
     }
 
     @Override
     public UserDetails loadUserbyName(String username) {
-        if(!username.equals("NONE_PROVIDED")){
+        if (!username.equals("NONE_PROVIDED")) {
             Account account = accountRepository.findAccountByUsername(username).get(0);
             return new ApplicationUser(
-                    account.getRole().equals("Admin")?ADMIN.getAuthority():USER.getAuthority(),
+                    account.getRole().equals("Admin") ? ADMIN.getAuthority() : USER.getAuthority(),
                     account.getUsername(),
                     account.getPassword(),
                     ACCOUNT_NON_EXPIRED,

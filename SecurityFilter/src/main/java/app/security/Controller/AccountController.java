@@ -1,6 +1,8 @@
 package app.security.Controller;
 
+import app.security.DTO.AccountDto;
 import app.security.Entity.Account;
+import app.security.Event.AccountEvent.AccountProducer.AccountEventProducer;
 import app.security.Repository.AccountRepository;
 import app.security.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +14,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/Test")
 public class AccountController {
+
+    private final AccountService accountService;
+    private final AccountEventProducer accountEventProducer;
+
     @Autowired
-    private AccountService accountService;
-    @Autowired
-    private AccountRepository accountRepository;
+    public AccountController(final AccountService accountService,
+                             final AccountEventProducer accountEventProducer) {
+        this.accountService = accountService;
+        this.accountEventProducer = accountEventProducer;
+    }
 
     @PostMapping("/signup")
-    public void setAccount(@RequestBody Account account){
-        accountService.setAccount(account);
+    public void setAccount(@RequestBody AccountDto account) {
+        if (account == null) return;
+        accountEventProducer.sendCreationMessage(account);
     }
 
     @GetMapping("/User/{username}")
-    public ResponseEntity<Void> getUseByUsername(@PathVariable String username){
+    public ResponseEntity<Void> getUseByUsername(@PathVariable String username) {
         Account account = accountService.getAccountByUsername(username);
-        return new ResponseEntity(account,HttpStatus.OK);
+        return new ResponseEntity(account, HttpStatus.OK);
     }
 }

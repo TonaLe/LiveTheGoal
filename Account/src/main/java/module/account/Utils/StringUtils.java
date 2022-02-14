@@ -1,4 +1,4 @@
-package app.security.Utils;
+package module.account.Utils;
 
 import com.google.gson.Gson;
 

@@ -1,15 +1,14 @@
-package module.account.AccountEvent.AccountProducer;
+package module.account.Event.ErrorProducer;
 
-
-import module.account.AccountEvent.AccountProducer.Runnable.AccountRunnableProducer;
 import module.account.Config.AppConfigs;
-import module.account.DTO.AccountDto;
+import module.account.DTO.ErrorDto;
+import module.account.Event.Runnable.RunnableProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -18,12 +17,11 @@ import java.util.concurrent.TimeUnit;
 
 import static module.account.Utils.StringUtils.convertObjectToString;
 
-
 /**
- * The type Account producer.
+ * The type Error producer imp.
  */
-@Service
-public class AccountProducer implements AccountEventProducer {
+@Component
+public class ErrorProducerImp implements ErrorProducer{
 
     /**
      * The Properties.
@@ -40,10 +38,11 @@ public class AccountProducer implements AccountEventProducer {
      */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
+
     /**
-     * Instantiates a new Account producer.
+     * Instantiates a new Error producer imp.
      */
-    public AccountProducer() {
+    public ErrorProducerImp() {
         this.properties = new Properties();
     }
 
@@ -59,36 +58,15 @@ public class AccountProducer implements AccountEventProducer {
     }
 
     @Override
-    public void sendCreationMessage(final AccountDto account) {
+    public void sendMessage(final ErrorDto errorDto) {
         initProperties();
-        final KafkaProducer<String, String> accountKafkaProducer = new KafkaProducer<String, String>(properties);
-        AccountRunnableProducer accountRunnableProducer = new AccountRunnableProducer(account.getId(),
-                AppConfigs.ACCOUNT_CREATION_TOPIC, accountKafkaProducer, convertObjectToString(account));
-        executor.submit(accountRunnableProducer);
+        final KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(properties);
+        RunnableProducer runnableProducer = new RunnableProducer(Integer.parseInt(errorDto.getId()),
+                AppConfigs.ERROR_TOPIC, kafkaProducer, convertObjectToString(errorDto));
+        executor.submit(runnableProducer);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            accountRunnableProducer.shutdown();
-            executor.shutdown();
-            LOG.info("Closing Executor Service");
-            try {
-                executor.awaitTermination(1000 * 2, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        ));
-    }
-
-    @Override
-    public void sendAuthoriseMessage(final AccountDto account) {
-        initProperties();
-        final KafkaProducer<String, String> accountKafkaProducer = new KafkaProducer<String, String>(properties);
-        AccountRunnableProducer accountRunnableProducer = new AccountRunnableProducer(account.getId(),
-                AppConfigs.ACCOUNT_CREATION_TOPIC, accountKafkaProducer, convertObjectToString(account));
-        executor.submit(accountRunnableProducer);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            accountRunnableProducer.shutdown();
+            runnableProducer.shutdown();
             executor.shutdown();
             LOG.info("Closing Executor Service");
             try {

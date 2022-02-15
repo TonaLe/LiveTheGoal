@@ -1,5 +1,6 @@
 package app.security.Utils;
 
+import app.security.DTO.ErrorDto;
 import com.google.gson.Gson;
 
 public class StringUtils {
@@ -10,7 +11,7 @@ public class StringUtils {
         return gson.toJson(object);
     }
 
-    public static Object convertJsonToObject(String json) {
-        return gson.fromJson(json, Object.class);
+    public static ErrorDto convertJsonToErrorDto(String json) {
+        return gson.fromJson(json, ErrorDto.class);
     }
 }

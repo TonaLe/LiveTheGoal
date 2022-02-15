@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/Test")
@@ -26,8 +28,9 @@ public class AccountController {
     }
 
     @PostMapping("/signup")
-    public void setAccount(@RequestBody AccountDto account) {
+    public void setAccount(@Valid @RequestBody AccountDto account) {
         if (account == null) return;
+
         accountEventProducer.sendCreationMessage(account);
     }
 

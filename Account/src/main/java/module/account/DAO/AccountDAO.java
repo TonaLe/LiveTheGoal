@@ -5,7 +5,9 @@ import module.account.Entity.Account;
 
 public interface AccountDAO {
 
-    void setAccount(Account account);
+    void setAccount(final Account account);
 
-    Account getUserByUsername(String username);
+    Account getUserByUsername(final String username);
+
+    Account getUserByEmail(final String email);
 }

@@ -9,4 +9,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     //    @Query(value = "{'username':{$regex:?0}}")
     Account findAccountByUsername(String username);
+
+    Account findAccountByEmail(String email);
 }

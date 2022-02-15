@@ -1,6 +1,8 @@
 package app.security.Service;
 
 import app.security.DAO.AccountDAO;
+import app.security.DTO.AccountDto;
+import app.security.DTO.ErrorDto;
 import app.security.Entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,5 +29,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         return accountDAO.loadUserbyName(s);
+    }
+
+    @Override
+    public ErrorDto validateUserAccount(final AccountDto accountDto) {
+        return null;
     }
 }

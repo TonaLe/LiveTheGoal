@@ -1,12 +1,16 @@
 package app.security.Service;
 
 
+import app.security.DTO.AccountDto;
+import app.security.DTO.ErrorDto;
 import app.security.Entity.Account;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AccountService extends UserDetailsService {
 
-    void setAccount(Account account);
+    void setAccount(final Account account);
 
-    Account getAccountByUsername(String username);
+    Account getAccountByUsername(final String username);
+
+    ErrorDto validateUserAccount(final AccountDto accountDto);
 }

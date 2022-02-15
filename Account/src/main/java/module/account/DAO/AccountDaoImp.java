@@ -38,4 +38,9 @@ public class AccountDaoImp implements AccountDAO {
         return accountRepository.findAccountByUsername(username);
     }
 
+    @Override
+    public Account getUserByEmail(final String email) {
+        return accountRepository.findAccountByEmail(email);
+    }
+
 }

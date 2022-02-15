@@ -24,7 +24,7 @@ public class TokenServiceImpl implements TokenService {
 
     public String generateToken(final String username) {
         String token = null;
-        LOG.info("Generating token: ");
+        LOG.info("Generating token for username: " + username);
         try {
             JWSSigner signer = new MACSigner(generateSharedSecrect());
             JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();

@@ -1,6 +1,6 @@
 package module.account;
 
-import module.account.AccountEvent.AccountConsumer.AccountConsumer;
+import module.account.Event.AccountConsumer.AccountConsumer;
 import module.account.Config.AppConfigs;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.beans.factory.annotation.Autowired;

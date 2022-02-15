@@ -1,6 +1,7 @@
 package module.account.Utils;
 
 import com.google.gson.Gson;
+import module.account.DTO.AccountDto;
 
 public class StringUtils {
 
@@ -10,7 +11,7 @@ public class StringUtils {
         return gson.toJson(object);
     }
 
-    public static Object convertJsonToObject(String json) {
-        return gson.fromJson(json, Object.class);
+    public static AccountDto convertJsonToAccount(String json) {
+        return gson.fromJson(json, AccountDto.class);
     }
 }

@@ -1,4 +1,4 @@
-package module.account.AccountEvent.AccountProducer;
+package module.account.Event.AccountProducer;
 
 
 import module.account.DTO.AccountDto;

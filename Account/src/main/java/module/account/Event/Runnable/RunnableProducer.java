@@ -1,4 +1,4 @@
-package module.account.AccountEvent.AccountProducer.Runnable;
+package module.account.Event.Runnable;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * The type Account runnable producer.
  */
-public class AccountRunnableProducer implements Runnable {
+public class RunnableProducer implements Runnable {
 
     /**
      * The Log.
@@ -19,39 +19,39 @@ public class AccountRunnableProducer implements Runnable {
     /**
      * The Id.
      */
-    private int id;
+    private final int id;
     /**
      * The Topic name.
      */
-    private String topicName;
+    private final String topicName;
     /**
      * The Producer.
      */
-    private KafkaProducer<String, String> producer;
+    private final KafkaProducer<String, String> producer;
     /**
      * The Stopper.
      */
     private final AtomicBoolean STOPPER = new AtomicBoolean(false);
 
     /**
-     * The Json account.
+     * The Json object.
      */
-    private final String jsonAccount;
+    private final String jsonObject;
 
     /**
-     * Instantiates a new Account runnable producer.
+     * Instantiates a new runnable producer.
      *
      * @param id          the id
      * @param topicName   the topic name
      * @param producer    the producer
-     * @param jsonAccount the stringify account
+     * @param jsonObject the stringify object
      */
-    public AccountRunnableProducer(final int id, final String topicName, final KafkaProducer<String, String> producer,
-                                   final String jsonAccount) {
+    public RunnableProducer(final int id, final String topicName, final KafkaProducer<String, String> producer,
+                                   final String jsonObject) {
         this.id = id;
         this.topicName = topicName;
         this.producer = producer;
-        this.jsonAccount = jsonAccount;
+        this.jsonObject = jsonObject;
     }
 
     @Override
@@ -59,10 +59,10 @@ public class AccountRunnableProducer implements Runnable {
         try {
             LOG.info("Starting Account producer - " + id);
             while (!STOPPER.get()) {
-                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonAccount));
+                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonObject));
             }
         } catch (Exception e) {
-            LOG.error(String.valueOf(new IllegalArgumentException("Exception in Account producer - " + id)));
+            LOG.error(String.valueOf(new IllegalArgumentException("Exception in producer - " + id)));
             throw new RuntimeException(e);
         }
     }
@@ -71,7 +71,7 @@ public class AccountRunnableProducer implements Runnable {
      * Shutdown.
      */
     public void shutdown() {
-        LOG.info("Shutting down Account producer - " + id);
+        LOG.info("Shutting down producer - " + id);
         STOPPER.set(true);
     }
 }

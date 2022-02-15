@@ -1,41 +1,37 @@
-package module.account.AccountEvent.AccountConsumer;
+package app.security.Event.ErrorEvent;
 
-import module.account.Config.AppConfigs;
-import module.account.DTO.AccountDto;
-import module.account.Entity.Account;
-import module.account.Service.AccountService;
+import app.security.Config.AppConfigs;
+import app.security.DTO.ErrorDto;
+import app.security.Service.ErrorService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Properties;
 
-import static module.account.Config.AppConfigs.ACCOUNT_CREATION_TOPIC;
-import static module.account.Utils.StringUtils.convertJsonToObject;
+import static app.security.Config.AppConfigs.ERROR_TOPIC;
+import static app.security.Utils.StringUtils.convertJsonToErrorDto;
 
-@Service
-public class KafkaConsumerImpl implements AccountConsumer{
+@Component
+public class ErrorConsumerImpl implements ErrorConsumer{
 
     private final Properties PROPERTIES = new Properties();
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
-    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    private AccountService accountService;
+    private ErrorService errorService;
 
     @Override
     public Properties getProperties() {
-        LOG.info("Creating Properties ...");
+        LOG.info(String.format("Initializing consumer properties for %s: \n ", this.getClass().getName()));
 
         PROPERTIES.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, AppConfigs.BOOTSTRAP_SERVERS);
         PROPERTIES.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -57,14 +53,14 @@ public class KafkaConsumerImpl implements AccountConsumer{
                     LOG.info( "value: " + record.value() + " topic: " + record.topic() + " offset: " +
                             record.offset() + " partition: " + record.partition());
 
-                    if (record.topic().equals(ACCOUNT_CREATION_TOPIC)) {
+                    if (record.topic().equals(ERROR_TOPIC)) {
 
                         if (StringUtils.isEmpty(record.topic())) {
-                            return;
+                            continue;
                         }
 
-                        AccountDto accountDto = (AccountDto) convertJsonToObject(record.topic());
-                        accountService.setAccount(modelMapper.map(accountDto, Account.class));
+                        final ErrorDto errorDto = convertJsonToErrorDto(record.value());
+                        errorService.initErrorList(errorDto, Integer.parseInt(errorDto.getId()));
                     }
                 }
                 kafkaConsumer.commitSync();

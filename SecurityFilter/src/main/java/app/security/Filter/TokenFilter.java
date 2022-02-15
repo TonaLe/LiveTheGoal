@@ -62,7 +62,7 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
             LOG.info("There is no token to get");
             return;
         }
-        LOG.info("Get username from token: ");
+        LOG.info("Get username from token: " + authToken);
         try {
             final String bearerToken = StringUtils.remove(authToken, BEARER).trim();
 

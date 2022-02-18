@@ -31,7 +31,7 @@ public class ErrorProducerImp implements ErrorProducer{
     /**
      * The Executor.
      */
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /**
      * The Log.
@@ -53,15 +53,15 @@ public class ErrorProducerImp implements ErrorProducer{
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, AppConfigs.BOOTSTRAP_SERVERS);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.put(ProducerConfig.ACKS_CONFIG, Integer.toString(-1));
-        properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        properties.put(ProducerConfig.ACKS_CONFIG, Integer.toString(0));
+        properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, false);
     }
 
     @Override
-    public void sendMessage(final ErrorDto errorDto) {
+    public void sendMessage(final ErrorDto errorDto, final int id) {
         initProperties();
         final KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(properties);
-        RunnableProducer runnableProducer = new RunnableProducer(Integer.parseInt(errorDto.getId()),
+        RunnableProducer runnableProducer = new RunnableProducer(String.valueOf(id),
                 AppConfigs.ERROR_TOPIC, kafkaProducer, convertObjectToString(errorDto));
         executor.submit(runnableProducer);
 

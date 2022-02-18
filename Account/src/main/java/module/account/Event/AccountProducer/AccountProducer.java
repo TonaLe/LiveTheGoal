@@ -33,7 +33,7 @@ public class AccountProducer implements AccountEventProducer {
     /**
      * The Executor.
      */
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /**
      * The Log.
@@ -54,17 +54,19 @@ public class AccountProducer implements AccountEventProducer {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, AppConfigs.BOOTSTRAP_SERVERS);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.put(ProducerConfig.ACKS_CONFIG, Integer.toString(-1));
-        properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        properties.put(ProducerConfig.ACKS_CONFIG, Integer.toString(0));
+        properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, false);
     }
 
     @Override
     public void sendCreationMessage(final AccountDto account) {
         initProperties();
         final KafkaProducer<String, String> accountKafkaProducer = new KafkaProducer<String, String>(properties);
-        RunnableProducer accountRunnableProducer = new RunnableProducer(account.getId(),
+        RunnableProducer accountRunnableProducer = new RunnableProducer(String.valueOf(account.getId()),
                 AppConfigs.ACCOUNT_CREATION_TOPIC, accountKafkaProducer, convertObjectToString(account));
         executor.submit(accountRunnableProducer);
+        accountRunnableProducer.shutdown();
+        executor.shutdown();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             accountRunnableProducer.shutdown();
@@ -83,7 +85,7 @@ public class AccountProducer implements AccountEventProducer {
     public void sendAuthoriseMessage(final AccountDto account) {
         initProperties();
         final KafkaProducer<String, String> accountKafkaProducer = new KafkaProducer<String, String>(properties);
-        RunnableProducer accountRunnableProducer = new RunnableProducer(account.getId(),
+        RunnableProducer accountRunnableProducer = new RunnableProducer(String.valueOf(account.getId()),
                 AppConfigs.ACCOUNT_CREATION_TOPIC, accountKafkaProducer, convertObjectToString(account));
         executor.submit(accountRunnableProducer);
 

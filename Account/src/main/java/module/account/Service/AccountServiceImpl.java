@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -31,15 +33,13 @@ public class AccountServiceImpl implements AccountService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    private final AccountProducer accountProducer;
+    private final ConcurrentHashMap<Integer, ErrorDto> listError = new ConcurrentHashMap<>();
 
     @Autowired
     public AccountServiceImpl(final AccountDAO accountDAO,
-                              final ErrorProducer errorProducer,
-                              final AccountProducer accountProducer) {
+                              final ErrorProducer errorProducer) {
         this.accountDAO = accountDAO;
         this.errorProducer = errorProducer;
-        this.accountProducer = accountProducer;
         this.modelMapper = new ModelMapper();
     }
 
@@ -48,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
         LOG.info("Saving account: " + account.getUsername());
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        Role roleDomain = Role.valueOf(account.getRole());
+        Role roleDomain = Role.valueOf(StringUtils.upperCase(account.getRole()));
         Account accountDomain = modelMapper.map(account, Account.class);
         accountDomain.setRole(roleDomain);
         accountDomain.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
@@ -87,7 +87,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void sendErrorMsg(final ErrorDto errorDto) {
-        errorProducer.sendMessage(errorDto);
+    public void sendErrorMsg(final ErrorDto errorDto, final int id) {
+        if (listError.isEmpty() || listError.get(id) == null) {
+            listError.put(id, errorDto);
+            errorProducer.sendMessage(errorDto, id);
+        }
     }
 }

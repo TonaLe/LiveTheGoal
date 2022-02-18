@@ -37,5 +37,5 @@ public interface AccountService  {
      *
      * @param errorDto the error dto
      */
-    void sendErrorMsg(final ErrorDto errorDto);
+    void sendErrorMsg(final ErrorDto errorDto, final int id);
 }

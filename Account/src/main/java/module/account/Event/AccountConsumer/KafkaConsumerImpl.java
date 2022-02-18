@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import static module.account.Config.AppConfigs.ACCOUNT_CREATION_TOPIC;
 import static module.account.Utils.StringUtils.convertJsonToAccount;
@@ -26,6 +28,8 @@ public class KafkaConsumerImpl implements AccountConsumer{
 
     private final Properties PROPERTIES = new Properties();
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final Set<String> setKeyConsumer = new HashSet<>();
+    private final String HYPHEN = "_";
 
     @Autowired
     private AccountService accountService;
@@ -40,6 +44,9 @@ public class KafkaConsumerImpl implements AccountConsumer{
         PROPERTIES.put(ConsumerConfig.GROUP_ID_CONFIG, "Group1");
         PROPERTIES.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         PROPERTIES.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        PROPERTIES.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "20000");
+        PROPERTIES.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
+        PROPERTIES.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "15000");
         return PROPERTIES;
     }
 
@@ -49,15 +56,16 @@ public class KafkaConsumerImpl implements AccountConsumer{
 
         while (true) {
             try {
-                final ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1000));
+                final ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(500));
                 for (ConsumerRecord<String, String> record : records) {
                     LOG.info( "value: " + record.value() + " topic: " + record.topic() + " offset: " +
                             record.offset() + " partition: " + record.partition());
 
                     if (record.topic().equals(ACCOUNT_CREATION_TOPIC)) {
 
-                        if (StringUtils.isEmpty(record.topic())) {
-                            return;
+                        final String keyPartition = StringUtils.join(HYPHEN, record.partition(), record.key());
+                        if (StringUtils.isEmpty(record.value()) || setKeyConsumer.contains(keyPartition)) {
+                            continue;
                         }
 
                         final AccountDto accountDto = convertJsonToAccount(record.value());
@@ -65,8 +73,8 @@ public class KafkaConsumerImpl implements AccountConsumer{
                         final ErrorDto errorDto = accountService.validateAccountDto(accountDto);
 
                         if (errorDto != null) {
-                            accountService.sendErrorMsg(errorDto);
-                            kafkaConsumer.commitSync();
+                            accountService.sendErrorMsg(errorDto, accountDto.getId());
+                            continue;
                         }
                         accountService.setAccount(accountDto);
                     }

@@ -12,5 +12,5 @@ public interface ErrorProducer {
      *
      * @param errorDto the error dto
      */
-    void sendMessage(final ErrorDto errorDto);
+    void sendMessage(final ErrorDto errorDto, final int id);
 }

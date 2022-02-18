@@ -2,7 +2,6 @@ package app.security.Event.AccountEvent.AccountProducer;
 
 import app.security.Config.AppConfigs;
 import app.security.DTO.AccountDto;
-import app.security.Entity.Account;
 import app.security.Event.AccountEvent.AccountProducer.Runnable.AccountRunnableProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -22,7 +21,7 @@ import static app.security.Utils.StringUtils.convertObjectToString;
  * The type Account producer.
  */
 @Service
-public class AccountProducer implements AccountEventProducer {
+public class AccountProducer implements AccountEventProducer, Runnable {
 
     /**
      * The Properties.
@@ -32,7 +31,7 @@ public class AccountProducer implements AccountEventProducer {
     /**
      * The Executor.
      */
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /**
      * The Log.
@@ -53,8 +52,8 @@ public class AccountProducer implements AccountEventProducer {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, AppConfigs.BOOTSTRAP_SERVERS);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.put(ProducerConfig.ACKS_CONFIG, Integer.toString(-1));
-        properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        properties.put(ProducerConfig.ACKS_CONFIG, Integer.toString(0));
+        properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, false);
     }
 
     @Override
@@ -97,5 +96,10 @@ public class AccountProducer implements AccountEventProducer {
             }
         }
         ));
+    }
+
+    @Override
+    public void run() {
+
     }
 }

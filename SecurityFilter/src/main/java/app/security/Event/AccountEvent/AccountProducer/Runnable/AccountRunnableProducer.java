@@ -58,9 +58,7 @@ public class AccountRunnableProducer implements Runnable {
     public void run() {
         try {
             LOG.info("Starting Account producer - " + id);
-            while (!STOPPER.get()) {
-                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonAccount));
-            }
+            producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonAccount));
         } catch (Exception e) {
             LOG.error("Exception in Account producer - " + id);
             throw new RuntimeException(e);

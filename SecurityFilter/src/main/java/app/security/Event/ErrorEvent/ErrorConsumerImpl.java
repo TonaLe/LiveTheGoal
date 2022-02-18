@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import static app.security.Config.AppConfigs.ERROR_TOPIC;
 import static app.security.Utils.StringUtils.convertJsonToErrorDto;
@@ -25,6 +27,8 @@ public class ErrorConsumerImpl implements ErrorConsumer{
 
     private final Properties PROPERTIES = new Properties();
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final Set<String> setKeyConsumer = new HashSet<>();
+    private final String HYPHEN = "_";
 
     @Autowired
     private ErrorService errorService;
@@ -39,6 +43,9 @@ public class ErrorConsumerImpl implements ErrorConsumer{
         PROPERTIES.put(ConsumerConfig.GROUP_ID_CONFIG, "Group1");
         PROPERTIES.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         PROPERTIES.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        PROPERTIES.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "20000");
+        PROPERTIES.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
+        PROPERTIES.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "15000");
         return PROPERTIES;
     }
 
@@ -48,19 +55,21 @@ public class ErrorConsumerImpl implements ErrorConsumer{
 
         while (true) {
             try {
-                ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1000));
+                ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(500));
                 for (ConsumerRecord<String, String> record : records) {
                     LOG.info( "value: " + record.value() + " topic: " + record.topic() + " offset: " +
                             record.offset() + " partition: " + record.partition());
 
                     if (record.topic().equals(ERROR_TOPIC)) {
 
-                        if (StringUtils.isEmpty(record.topic())) {
+                        final String keyPartition = StringUtils.join(HYPHEN, record.partition(), record.key());
+                        if (StringUtils.isEmpty(record.value()) || setKeyConsumer.contains(keyPartition)) {
                             continue;
                         }
 
                         final ErrorDto errorDto = convertJsonToErrorDto(record.value());
-                        errorService.initErrorList(errorDto, Integer.parseInt(errorDto.getId()));
+                        setKeyConsumer.add(keyPartition);
+                        errorService.initErrorList(errorDto, record.key());
                     }
                 }
                 kafkaConsumer.commitSync();

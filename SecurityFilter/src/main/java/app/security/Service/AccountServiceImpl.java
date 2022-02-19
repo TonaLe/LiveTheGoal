@@ -10,9 +10,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 
 @Service
 public class AccountServiceImpl implements AccountService, UserDetailsService {
+
+    private final ConcurrentHashMap<String, AccountDto> listAccountEvent = new ConcurrentHashMap<>();
+
     @Autowired
     private AccountDAO accountDAO;
 
@@ -32,7 +37,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public ErrorDto validateUserAccount(final AccountDto accountDto) {
+    public AccountDto loadAccountByUsername(final String username) {
+        if ()
         return null;
     }
 }

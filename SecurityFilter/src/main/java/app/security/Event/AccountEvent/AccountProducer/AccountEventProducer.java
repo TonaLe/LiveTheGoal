@@ -21,4 +21,19 @@ public interface AccountEventProducer {
      * @param account the account
      */
     void sendAuthoriseMessage(final AccountDto account);
+
+    /**
+     * Send request for account info.
+     *
+     * @param username the username
+     */
+    void sendRequestForAccountInfo(final String username);
+
+    /**
+     * Send request for accounts info.
+     *
+     * @param limit  the limit
+     * @param offset the offset
+     */
+    void sendRequestForAccountsInfo(final int limit, final int offset);
 }

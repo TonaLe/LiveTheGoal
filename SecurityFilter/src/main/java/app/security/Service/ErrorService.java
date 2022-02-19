@@ -14,18 +14,18 @@ public class ErrorService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    public void initErrorList(final ErrorDto errorDto, final String id) {
-        if (listError.get(id) != null) {
-            LOG.warn(String.format("Error id: %s already existed \n", id));
+    public void initErrorList(final ErrorDto errorDto, final String username) {
+        if (listError.get(username) != null) {
+            LOG.warn(String.format("Error username: %s already existed in Map\n", username));
             return;
         }
-        listError.put(id, errorDto);
+        listError.put(username, errorDto);
     }
 
-    public ErrorDto getError(final String id) {
+    public ErrorDto getError(final String username) {
         if (listError.isEmpty()) {
             return null;
         }
-        return listError.get(id);
+        return listError.get(username);
     }
 }

@@ -15,10 +15,7 @@ import lombok.*;
 @Getter
 @Setter
 public class AccountDto {
-    /**
-     * The Id.
-     */
-    private int id;
+
     /**
      * The Username.
      */

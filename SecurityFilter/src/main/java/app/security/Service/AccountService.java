@@ -6,6 +6,8 @@ import app.security.DTO.ErrorDto;
 import app.security.Entity.Account;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
+
 /**
  * The interface Account service.
  */
@@ -17,14 +19,14 @@ public interface AccountService extends UserDetailsService {
      * @param account the account
      */
     void setAccount(final Account account);
-
-    /**
-     * Gets account by username.
-     *
-     * @param username the username
-     * @return the account by username
-     */
-    Account getAccountByUsername(final String username);
+//
+//    /**
+//     * Gets account by username.
+//     *
+//     * @param username the username
+//     * @return the account by username
+//     */
+//    Account getAccountByUsername(final String username);
 
     /**
      * Load account by username account dto.
@@ -35,9 +37,17 @@ public interface AccountService extends UserDetailsService {
     AccountDto loadAccountByUsername(final String username);
 
     /**
-     * Init account event.
+     * Init account list.
      *
-     * @param accountDto the account dto
+     * @param listAccount the list account
+     * @param key         the key
      */
-    void initAccountEvent(final AccountDto accountDto);
+    void initAccountList(final List<AccountDto> listAccount, final String key);
+
+    /**
+     * Gets list account.
+     *
+     * @return the list account
+     */
+    List<AccountDto> getListAccount();
 }

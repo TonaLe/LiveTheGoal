@@ -13,6 +13,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -22,6 +23,7 @@ import java.util.Set;
 
 import static module.account.Config.AppConfigs.ACCOUNT_CREATION_TOPIC;
 import static module.account.Utils.StringUtils.convertJsonToAccount;
+import static module.account.Utils.StringUtils.convertJsonToPageable;
 
 @Service
 public class KafkaConsumerImpl implements AccountConsumer{
@@ -77,6 +79,12 @@ public class KafkaConsumerImpl implements AccountConsumer{
                             continue;
                         }
                         accountService.setAccount(accountDto);
+                    } else if (record.topic().equals(AppConfigs.LIST_ACCOUNT_OFFSET_INFO_TOPIC)) {
+                        final Pageable pageable = (Pageable) convertJsonToPageable(record.value());
+
+                        if (pageable != null) {
+                            accountService.sendListAccountInfoMsg(pageable);
+                        }
                     }
                 }
                 kafkaConsumer.commitSync();

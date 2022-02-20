@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 
 @RestController
@@ -75,7 +76,13 @@ public class AccountController {
                                     @RequestParam("offset") int offset) {
         accountEventProducer.sendRequestForAccountsInfo(limit, offset);
 
-        sleepThreadInSecond(1000);
+        sleepThreadInSecond(2000);
+
+        final List<AccountDto> listAccount = accountService.getListAccount();
+        if (listAccount.isEmpty()) {
+            Response.status(Response.Status.BAD_REQUEST).entity("No Account to be collected").build();
+        }
+        return Response.status(Response.Status.OK).entity(listAccount).build();
     }
 
     private void sleepThreadInSecond(final long milisecond) {

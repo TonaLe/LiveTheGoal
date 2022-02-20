@@ -26,7 +26,7 @@ public class AccountApplication implements ApplicationRunner {
     public void run(final ApplicationArguments args) throws Exception {
         Properties properties = accountConsumer.getProperties();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
-        consumer.subscribe(Arrays.asList(AppConfigs.ACCOUNT_CREATION_TOPIC));
+        consumer.subscribe(Arrays.asList(AppConfigs.ACCOUNT_CREATION_TOPIC, AppConfigs.LIST_ACCOUNT_OFFSET_INFO_TOPIC));
         accountConsumer.consumeMessage(consumer);
     }
 }

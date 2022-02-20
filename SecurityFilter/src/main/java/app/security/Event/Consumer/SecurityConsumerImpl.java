@@ -1,7 +1,9 @@
-package app.security.Event.ErrorEvent;
+package app.security.Event.Consumer;
 
 import app.security.Config.AppConfigs;
+import app.security.DTO.AccountDto;
 import app.security.DTO.ErrorDto;
+import app.security.Service.AccountService;
 import app.security.Service.ErrorService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,22 +18,54 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
 import static app.security.Config.AppConfigs.ERROR_TOPIC;
 import static app.security.Utils.StringUtils.convertJsonToErrorDto;
+import static app.security.Utils.StringUtils.convertJsonToListAccount;
 
+/**
+ * The type Security consumer.
+ */
 @Component
-public class ErrorConsumerImpl implements ErrorConsumer{
+public class SecurityConsumerImpl implements SecurityKafkaConsumer {
 
+    /**
+     * The Properties.
+     */
     private final Properties PROPERTIES = new Properties();
+    /**
+     * The Log.
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    /**
+     * The Set key consumer.
+     */
     private final Set<String> setKeyConsumer = new HashSet<>();
-    private final String HYPHEN = "_";
 
+    /**
+     * The Error service.
+     */
+    private final ErrorService errorService;
+
+    /**
+     * The Account service.
+     */
+    private final AccountService accountService;
+
+    /**
+     * Instantiates a new Security consumer.
+     *
+     * @param errorService   the error service
+     * @param accountService the account service
+     */
     @Autowired
-    private ErrorService errorService;
+    public SecurityConsumerImpl(final ErrorService errorService, final AccountService accountService) {
+        this.errorService = errorService;
+        this.accountService = accountService;
+    }
 
     @Override
     public Properties getProperties() {
@@ -60,9 +94,12 @@ public class ErrorConsumerImpl implements ErrorConsumer{
                     LOG.info( "value: " + record.value() + " topic: " + record.topic() + " offset: " +
                             record.offset() + " partition: " + record.partition());
 
+                    final String HYPHEN = "_";
+                    final String keyPartition = StringUtils.join(HYPHEN, record.partition(),
+                            record.key(), record.offset());
+
                     if (record.topic().equals(ERROR_TOPIC)) {
 
-                        final String keyPartition = StringUtils.join(HYPHEN, record.partition(), record.key());
                         if (StringUtils.isEmpty(record.value()) || setKeyConsumer.contains(keyPartition)) {
                             continue;
                         }
@@ -70,6 +107,13 @@ public class ErrorConsumerImpl implements ErrorConsumer{
                         final ErrorDto errorDto = convertJsonToErrorDto(record.value());
                         setKeyConsumer.add(keyPartition);
                         errorService.initErrorList(errorDto, record.key());
+                    } else if (record.topic().equals(AppConfigs.LIST_ACCOUNT_INFO_TOPIC)) {
+                        if (StringUtils.isBlank(record.value())) {
+                            continue;
+                        }
+
+                        final List<AccountDto> listAccount = convertJsonToListAccount(record.value());
+                        accountService.initAccountList(listAccount, keyPartition);
                     }
                 }
                 kafkaConsumer.commitSync();

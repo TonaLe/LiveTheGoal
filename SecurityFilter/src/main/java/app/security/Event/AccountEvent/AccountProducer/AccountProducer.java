@@ -134,7 +134,7 @@ public class AccountProducer implements AccountEventProducer {
         Pageable pageable =  new OffsetBasedPageRequest(limit, offset, Sort.unsorted());
         final KafkaProducer<String, String> accountKafkaProducer = new KafkaProducer<String, String>(properties);
         AccountRunnableProducer accountRunnableProducer = new AccountRunnableProducer(ACCOUNT_KEY_TOPIC,
-                AppConfigs.ACCOUNT_CREATION_TOPIC, accountKafkaProducer, convertObjectToString(pageable));
+                AppConfigs.LIST_ACCOUNT_OFFSET_INFO_TOPIC, accountKafkaProducer, convertObjectToString(pageable));
         executor.submit(accountRunnableProducer);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

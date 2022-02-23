@@ -4,8 +4,11 @@ import app.security.DTO.ApplicationUser;
 import app.security.Entity.Account;
 import app.security.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static app.security.Enum.UserAuthorities.ADMIN;
 import static app.security.Enum.UserAuthorities.USER;
@@ -57,7 +60,7 @@ public class AccountDaoImp implements AccountDAO {
     @Override
     public UserDetails loadUserbyName(String username) {
         if (!username.equals("NONE_PROVIDED")) {
-            Account account = accountRepository.findAccountByUsername(username).get(0);
+            Account account = accountRepository.findAccountByUsername(username);
             return new ApplicationUser(
                     account.getRole().equals("Admin") ? ADMIN.getAuthority() : USER.getAuthority(),
                     account.getUsername(),
@@ -73,7 +76,16 @@ public class AccountDaoImp implements AccountDAO {
 
     @Override
     public Account getUserByUsername(String username) {
-        return accountRepository.findAccountByUsername(username).get(0);
+        return accountRepository.findAccountByUsername(username);
     }
 
+    @Override
+    public Account getUserByEmail(final String email) {
+        return accountRepository.findAccountByEmail(email);
+    }
+
+    @Override
+    public List<Account> findAllAccount(final Pageable pageable) {
+        return accountRepository.findAll(pageable).getContent();
+    }
 }

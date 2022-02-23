@@ -2,8 +2,6 @@ package app.security.Service;
 
 
 import app.security.DTO.AccountDto;
-import app.security.DTO.ErrorDto;
-import app.security.Entity.Account;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -18,7 +16,7 @@ public interface AccountService extends UserDetailsService {
      *
      * @param account the account
      */
-    void setAccount(final Account account);
+    void setAccount(final AccountDto account);
 //
 //    /**
 //     * Gets account by username.
@@ -47,7 +45,24 @@ public interface AccountService extends UserDetailsService {
     /**
      * Gets list account.
      *
+     * @param limit  the limit
+     * @param offset the offset
      * @return the list account
      */
-    List<AccountDto> getListAccount();
+    List<AccountDto> getListAccount(final int limit, final int offset);
+
+    /**
+     * Update account info.
+     *
+     * @param username   the username
+     * @param accountDto the account dto
+     */
+    void updateAccountInfo(final String username, final AccountDto accountDto);
+
+    /**
+     * Delete account.
+     *
+     * @param username the username
+     */
+    void deleteAccount(final String username);
 }

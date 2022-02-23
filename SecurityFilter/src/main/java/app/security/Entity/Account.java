@@ -42,6 +42,9 @@ public class Account implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "isDeleted")
+    private Boolean isDeleted;
+
     @Column(name = "createdAt")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

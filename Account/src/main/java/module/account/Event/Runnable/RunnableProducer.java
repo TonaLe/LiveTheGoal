@@ -19,7 +19,7 @@ public class RunnableProducer implements Runnable {
     /**
      * The Id.
      */
-    private final int id;
+    private final String id;
     /**
      * The Topic name.
      */
@@ -46,7 +46,7 @@ public class RunnableProducer implements Runnable {
      * @param producer    the producer
      * @param jsonObject the stringify object
      */
-    public RunnableProducer(final int id, final String topicName, final KafkaProducer<String, String> producer,
+    public RunnableProducer(final String id, final String topicName, final KafkaProducer<String, String> producer,
                                    final String jsonObject) {
         this.id = id;
         this.topicName = topicName;
@@ -58,9 +58,7 @@ public class RunnableProducer implements Runnable {
     public void run() {
         try {
             LOG.info("Starting Account producer - " + id);
-            while (!STOPPER.get()) {
-                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonObject));
-            }
+            producer.send(new ProducerRecord<>(topicName, id, jsonObject));
         } catch (Exception e) {
             LOG.error(String.valueOf(new IllegalArgumentException("Exception in producer - " + id)));
             throw new RuntimeException(e);

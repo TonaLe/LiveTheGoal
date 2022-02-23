@@ -11,6 +11,7 @@ lastName VARCHAR(50) NOT NULL,
 msisdn VARCHAR(15) NOT NULL,
 email VARCHAR(50) NOT NULL UNIQUE,
 role VARCHAR(50) NOT NULL,
+isDeleted Bit NOT NULL,
 createdAt DATETIME,
 modifiedAt DATETIME
 );

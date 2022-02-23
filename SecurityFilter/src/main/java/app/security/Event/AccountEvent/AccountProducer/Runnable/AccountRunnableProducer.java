@@ -19,7 +19,7 @@ public class AccountRunnableProducer implements Runnable {
     /**
      * The Id.
      */
-    private int id;
+    private String id;
     /**
      * The Topic name.
      */
@@ -46,7 +46,7 @@ public class AccountRunnableProducer implements Runnable {
      * @param producer    the producer
      * @param jsonAccount the stringify account
      */
-    public AccountRunnableProducer(final int id, final String topicName, final KafkaProducer<String, String> producer,
+    public AccountRunnableProducer(final String id, final String topicName, final KafkaProducer<String, String> producer,
                                    final String jsonAccount) {
         this.id = id;
         this.topicName = topicName;
@@ -58,9 +58,7 @@ public class AccountRunnableProducer implements Runnable {
     public void run() {
         try {
             LOG.info("Starting Account producer - " + id);
-            while (!STOPPER.get()) {
-                producer.send(new ProducerRecord<>(topicName, Integer.toString(id), jsonAccount));
-            }
+            producer.send(new ProducerRecord<>(topicName, id, jsonAccount));
         } catch (Exception e) {
             LOG.error("Exception in Account producer - " + id);
             throw new RuntimeException(e);

@@ -14,8 +14,15 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,6 +38,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
+    private final ConcurrentHashMap<Integer, ErrorDto> listError = new ConcurrentHashMap<>();
+
     private final AccountProducer accountProducer;
 
     @Autowired
@@ -41,14 +50,14 @@ public class AccountServiceImpl implements AccountService {
         this.errorProducer = errorProducer;
         this.accountProducer = accountProducer;
         this.modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
     @Override
     public void setAccount(AccountDto account) {
         LOG.info("Saving account: " + account.getUsername());
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        Role roleDomain = Role.valueOf(account.getRole());
+        Role roleDomain = Role.valueOf(StringUtils.upperCase(account.getRole()));
         Account accountDomain = modelMapper.map(account, Account.class);
         accountDomain.setRole(roleDomain);
         accountDomain.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
@@ -87,7 +96,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void sendErrorMsg(final ErrorDto errorDto) {
-        errorProducer.sendMessage(errorDto);
+    public void sendErrorMsg(final ErrorDto errorDto, final int id) {
+        if (listError.isEmpty() || listError.get(id) == null) {
+            listError.put(id, errorDto);
+            errorProducer.sendMessage(errorDto, id);
+        }
+    }
+
+    @Override
+    public void sendListAccountInfoMsg(final Pageable pageable) {
+        LOG.info(String.format("Get list account followed by offset: %d and limit: %d",
+                pageable.getOffset(), pageable.getPageSize()));
+
+        final List<Account> listAccount = accountDAO.findAllAccount(pageable);
+        if (listAccount == null || listAccount.isEmpty()) {
+            accountProducer.sendAllAccountInfoMsg(Collections.EMPTY_LIST);
+        }
+
+        List<AccountDto> listAccountDto = listAccount.stream()
+                .filter(Objects::nonNull)
+                .map(account -> modelMapper.map(account, AccountDto.class))
+                .collect(Collectors.toList());
+        accountProducer.sendAllAccountInfoMsg(listAccountDto);
     }
 }

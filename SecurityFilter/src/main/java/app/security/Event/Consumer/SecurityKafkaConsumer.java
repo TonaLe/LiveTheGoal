@@ -1,13 +1,13 @@
-package app.security.Event.ErrorEvent;
+package app.security.Event.Consumer;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 import java.util.Properties;
 
 /**
- * The interface Error consumer.
+ * The interface Security kafka consumer.
  */
-public interface ErrorConsumer {
+public interface SecurityKafkaConsumer {
 
     /**
      * Gets properties.

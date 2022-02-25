@@ -53,4 +53,19 @@ public class AccountDto {
      * The Role.
      */
     private String role;
+
+    /**
+     * The Address.
+     */
+    private String address;
+
+    /**
+     * The City.
+     */
+    private String city;
+
+    /**
+     * The Country.
+     */
+    private String country;
 }

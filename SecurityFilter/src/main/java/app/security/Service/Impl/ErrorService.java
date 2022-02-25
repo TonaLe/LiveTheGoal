@@ -1,4 +1,4 @@
-package app.security.Service;
+package app.security.Service.Impl;
 
 import app.security.DTO.ErrorDto;
 import org.slf4j.Logger;

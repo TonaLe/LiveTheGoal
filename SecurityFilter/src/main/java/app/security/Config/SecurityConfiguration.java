@@ -3,7 +3,7 @@ package app.security.Config;
 
 import app.security.Filter.JWTLoginFilter;
 import app.security.Filter.TokenFilter;
-import app.security.Service.AccountServiceImpl;
+import app.security.Service.Impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

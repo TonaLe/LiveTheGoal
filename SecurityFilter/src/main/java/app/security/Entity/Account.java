@@ -45,6 +45,10 @@ public class Account implements Serializable {
     @Column(name = "isDeleted")
     private Boolean isDeleted;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
+    @PrimaryKeyJoinColumn
+    private AccountDetail accountDetail;
+
     @Column(name = "createdAt")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

@@ -1,7 +1,7 @@
 package app.security.Filter;
 
 import app.security.Service.AccountService;
-import app.security.Service.TokenServiceImpl;
+import app.security.Service.Impl.TokenServiceImpl;
 import com.nimbusds.jose.JOSEException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

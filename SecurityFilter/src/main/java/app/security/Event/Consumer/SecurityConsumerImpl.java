@@ -4,7 +4,7 @@ import app.security.Config.AppConfigs;
 import app.security.DTO.AccountDto;
 import app.security.DTO.ErrorDto;
 import app.security.Service.AccountService;
-import app.security.Service.ErrorService;
+import app.security.Service.Impl.ErrorService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

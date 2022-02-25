@@ -1,5 +1,6 @@
-package app.security.DAO;
+package app.security.DAO.Impl;
 
+import app.security.DAO.AccountDAO;
 import app.security.DTO.ApplicationUser;
 import app.security.Entity.Account;
 import app.security.Repository.AccountRepository;

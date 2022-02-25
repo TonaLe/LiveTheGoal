@@ -1,5 +1,6 @@
-package app.security.Service;
+package app.security.Service.Impl;
 
+import app.security.Service.TokenService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;

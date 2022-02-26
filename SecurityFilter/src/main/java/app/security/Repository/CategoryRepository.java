@@ -8,9 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-
-    void CreateCategory(Category category);
-
     Page<Category> findAll(final Pageable pageable);
-
 }

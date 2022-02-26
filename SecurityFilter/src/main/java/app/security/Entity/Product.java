@@ -1,4 +1,6 @@
 package app.security.Entity;
+
+import app.security.Enum.Role;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,8 +13,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity(name = "productcategory")
-public class Category {
+@Entity(name = "product")
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,13 +22,28 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdat")
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "describe")
+    private String describe;
+
+    @Column(name = "sku")
+    private String sku;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "inventoryid")
+    private Inventory inventory;
+
+
+    @Column(name = "createdAt")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdat;
+    private Date createdAt;
 
-    @Column(name = "modifiedat")
+    @Column(name = "modifiedAt")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedat;
+    private Date modifiedAt;
 }

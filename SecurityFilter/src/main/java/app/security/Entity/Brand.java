@@ -1,8 +1,8 @@
 package app.security.Entity;
+
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,8 +11,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity(name = "productcategory")
-public class Category {
+@Entity(name = "brand")
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

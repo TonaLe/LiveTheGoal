@@ -19,7 +19,7 @@ public class CategoryDaoImp implements CategoryDAO {
 
     @Override
     public void addCategory(Category category) {
-        categoryRepository.CreateCategory(category);
+        categoryRepository.save(category);
     }
 
     @Override

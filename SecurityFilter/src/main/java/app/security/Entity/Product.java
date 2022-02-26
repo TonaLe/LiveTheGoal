@@ -42,15 +42,16 @@ public class Product {
 
     @Column(name = "isactive")
     private boolean isactive;
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @MapsId
-//    @JoinColumn(name = "inventoryid")
-//    private Inventory inventory;
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @MapsId
-//    @JoinColumn(name = "brandid")
-//    private Brand brand;
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "inventoryid")
+    private Inventory inventory;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "inventoryid")
+    private Brand brand;
 
     @ManyToOne
     @JoinColumn(name = "categoryid") // thông qua khóa ngoại categoryid

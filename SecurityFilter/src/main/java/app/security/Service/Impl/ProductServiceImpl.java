@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto createOrUpdateProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductDto productDto) {
         Product productDomain = modelMapper.map(productDto, Product.class);
         return convertEntityToDto(productDAO.createOrUpdateProduct(productDomain));
     }

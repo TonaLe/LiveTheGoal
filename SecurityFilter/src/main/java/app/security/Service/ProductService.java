@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     ProductDto loadProductByname(final String name);
     ProductDto loadProductById(final int id);
-    ProductDto createOrUpdateProduct(final ProductDto product);
+    ProductDto createProduct(final ProductDto product);
 
     List<ProductDto> getListProduct(final int limit, final int offset);
 

@@ -4,7 +4,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Builder
@@ -13,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity(name = "productcategory")
-public class Category implements Serializable{
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,12 +20,12 @@ public class Category implements Serializable{
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdAt")
+    @Column(name = "createdat")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name = "modifiedAt")
+    @Column(name = "modifiedat")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedAt;

@@ -60,10 +60,14 @@ public class TokenFilter extends UsernamePasswordAuthenticationFilter {
 
         if (authToken == null) {
             LOG.info("There is no token to get");
-            return;
+            chain.doFilter(req, res);
         }
         LOG.info("Get username from token: " + authToken);
         try {
+            if (authToken == null) {
+                return;
+            }
+
             final String bearerToken = StringUtils.remove(authToken, BEARER).trim();
 
             if (token.validateTokenLogin(bearerToken)) {

@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -58,4 +59,7 @@ public class Account implements Serializable {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedAt;
+
+    @OneToMany(mappedBy = "account")
+    private List<CartItem> cartItems;
 }

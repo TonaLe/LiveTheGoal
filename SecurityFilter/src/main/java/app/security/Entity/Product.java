@@ -22,28 +22,50 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "describe")
     private String describe;
+
+    @Column(name = "price")
+    private float price;
 
     @Column(name = "sku")
     private String sku;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
-    @JoinColumn(name = "inventoryid")
-    private Inventory inventory;
+    @Column(name = "categoryid")
+    private int categoryid;
+
+    @Column(name = "brandid")
+    private int brandid;
+
+    @Column(name = "inventoryid")
+    private int inventoryid;
+
+    @Column(name = "isactive")
+    private boolean isactive;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @MapsId
+//    @JoinColumn(name = "inventoryid")
+//    private Inventory inventory;
+
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @MapsId
+//    @JoinColumn(name = "brandid")
+//    private Brand brand;
+
+    @ManyToOne
+    @JoinColumn(name = "categoryid") // thông qua khóa ngoại categoryid
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Category category;
 
 
-    @Column(name = "createdAt")
+    @Column(name = "createdat")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Date createdat;
 
-    @Column(name = "modifiedAt")
+    @Column(name = "modifiedat")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedAt;
+    private Date modifiedat;
 }

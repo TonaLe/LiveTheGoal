@@ -18,8 +18,13 @@ public class CategoryDaoImp implements CategoryDAO {
 
 
     @Override
-    public void addCategory(Category category) {
-        categoryRepository.save(category);
+    public Category findCategoryById(int id) {
+        return categoryRepository.findCategoryById(id);
+    }
+
+    @Override
+    public Category createOrUpdateCategory(Category category) {
+        return categoryRepository.save(category);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package app.security.Controller;
 
 import app.security.DTO.CategoryDto;
+import app.security.Entity.Category;
 import app.security.Service.CategoryService;
 import app.security.Service.Impl.ErrorService;
 import lombok.SneakyThrows;
@@ -33,14 +34,14 @@ public class CategoryController {
     @PostMapping("/add")
     public Response addCategory(@Valid @RequestBody CategoryDto category) {
         if (category == null) return Response.status(Response.Status.BAD_REQUEST).build();
-        categoryService.createCategory(category);
+        var data= categoryService.createCategory(category);
         return Response.status(Response.Status.OK).build();
     }
 
     @GetMapping("/")
-    public List<CategoryDto> getAllCategory(@RequestParam("limit") int limit,
+    public Response getAllCategory(@RequestParam("limit") int limit,
                                             @RequestParam("offset") int offset) {
         var listCategory = categoryService.getListCategory(limit,offset);
-        return listCategory;
+        return Response.status(Response.Status.OK).build() ;
     }
 }

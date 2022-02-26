@@ -4,6 +4,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 @Builder
@@ -24,6 +25,11 @@ public class Category {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdat;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL) // Quan hệ 1-n (1 category có nhiều product thuộc)
+    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
+    @ToString.Exclude // Khoonhg sử dụng trong toString()
+    private Collection<Product> products;
 
     @Column(name = "modifiedat")
     @LastModifiedDate

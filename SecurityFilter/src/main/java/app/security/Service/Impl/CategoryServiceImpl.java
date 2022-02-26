@@ -1,13 +1,8 @@
 package app.security.Service.Impl;
 
-import app.security.DAO.AccountDAO;
-import app.security.DAO.AccountDetailDAO;
 import app.security.DAO.CategoryDAO;
-import app.security.DTO.AccountDto;
 import app.security.DTO.CategoryDto;
 import app.security.DTO.OffsetBasedPageRequest;
-import app.security.Entity.Account;
-import app.security.Entity.AccountDetail;
 import app.security.Entity.Category;
 import app.security.Service.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -17,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,9 +40,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(CategoryDto categoryDto) {
-
+    public CategoryDto findCategoryById(int id) {
+        return convertEntityToDto(categoryDAO.findCategoryById(id));
     }
+
+    @Override
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category categoryDomain = modelMapper.map(categoryDto, Category.class);
+        return convertEntityToDto(categoryDAO.createOrUpdateCategory(categoryDomain));
+    }
+
+    @Override
+    public CategoryDto updateCategoryInfo(int id, CategoryDto categoryDto) {
+        LOG.info(String.format("Update information for category: %s", id));
+        Category category = categoryDAO.findCategoryById(id);
+        Category categoryDomain = modelMapper.map(categoryDto, Category.class);
+        if (category != null){
+            category.setName(categoryDomain.getName());
+        }
+
+        return convertEntityToDto(categoryDAO.createOrUpdateCategory(category));
+    }
+
 
     private CategoryDto convertEntityToDto(final Category category) {
         CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);

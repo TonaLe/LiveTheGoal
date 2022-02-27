@@ -40,26 +40,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto findCategoryById(int id) {
-        return convertEntityToDto(categoryDAO.findCategoryById(id));
-    }
-
-    @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category categoryDomain = modelMapper.map(categoryDto, Category.class);
-        return convertEntityToDto(categoryDAO.createOrUpdateCategory(categoryDomain));
+        return convertEntityToDto(categoryDAO.setCategory(categoryDomain));
     }
 
     @Override
-    public CategoryDto updateCategoryInfo(int id, CategoryDto categoryDto) {
-        LOG.info(String.format("Update information for category: %s", id));
-        Category category = categoryDAO.findCategoryById(id);
+    public CategoryDto updateCategory(String name, CategoryDto categoryDto) {
+        LOG.info(String.format("Update information for category: %s", name));
+        Category category = categoryDAO.findCategoryByName(name);
         Category categoryDomain = modelMapper.map(categoryDto, Category.class);
         if (category != null){
             category.setName(categoryDomain.getName());
         }
-
-        return convertEntityToDto(categoryDAO.createOrUpdateCategory(category));
+        return convertEntityToDto(categoryDAO.setCategory(category));
     }
 
 

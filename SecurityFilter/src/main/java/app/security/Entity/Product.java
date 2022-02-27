@@ -31,17 +31,8 @@ public class Product {
     @Column(name = "sku")
     private String sku;
 
-    @Column(name = "categoryid")
-    private int categoryid;
-
-    @Column(name = "brandid")
-    private int brandid;
-
-    @Column(name = "inventoryid")
-    private int inventoryid;
-
-    @Column(name = "isactive")
-    private boolean isactive;
+    @Column(name = "isavailable")
+    private boolean isavailable;
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
@@ -50,7 +41,7 @@ public class Product {
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "inventoryid")
+    @JoinColumn(name = "brandid")
     private Brand brand;
 
     @ManyToOne

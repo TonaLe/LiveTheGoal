@@ -84,9 +84,9 @@ public class ProductServiceImpl implements ProductService {
             product.setName(productDomain.getName());
             product.setDescribe(productDomain.getDescribe());
             product.setSku(productDomain.getSku());
-            product.setBrandid(productDomain.getBrandid());
-            product.setInventoryid(productDomain.getInventoryid());
-            product.setCategoryid(productDomain.getCategoryid());
+//            product.setBrandid(productDomain.getBrandid());
+//            product.setInventoryid(productDomain.getInventoryid());
+//            product.setCategoryid(productDomain.getCategoryid());
             product.setPrice(productDomain.getPrice());
         }
         return convertEntityToDto(productDAO.createOrUpdateProduct(product));
@@ -95,13 +95,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(int id) {
         var product = modelMapper.map(loadProductById(id), Product.class);
-        product.setIsactive(false);
+        product.setAvailable(false);
         productDAO.createOrUpdateProduct(product);
     }
 
     private ProductDto convertEntityToDto(final Product product) {
-        ProductDto productDto = modelMapper.map(product, ProductDto.class);
-        return productDto;
+        return modelMapper.map(product, ProductDto.class);
     }
 
 }

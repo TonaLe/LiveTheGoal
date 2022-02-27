@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity(name = "brand")
+@Entity(name = "Brand")
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,12 @@ public class Brand {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdat")
+    @Column(name = "createdAt")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdat;
 
-    @Column(name = "modifiedat")
+    @Column(name = "modifiedAt")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedat;

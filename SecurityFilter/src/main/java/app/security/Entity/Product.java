@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity(name = "product")
+@Entity(name = "Product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,26 +31,17 @@ public class Product {
     @Column(name = "sku")
     private String sku;
 
-    @Column(name = "categoryid")
-    private int categoryid;
-
-    @Column(name = "brandid")
-    private int brandid;
-
-    @Column(name = "inventoryid")
-    private int inventoryid;
-
-    @Column(name = "isactive")
-    private boolean isactive;
+    @Column(name = "isAvailable")
+    private boolean isAvailable;
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "inventoryid")
+    @JoinColumn(name = "inventoryId")
     private Inventory inventory;
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "inventoryid")
+    @JoinColumn(name = "brandId")
     private Brand brand;
 
     @ManyToOne

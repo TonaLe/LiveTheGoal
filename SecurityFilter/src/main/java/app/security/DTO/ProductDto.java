@@ -25,7 +25,7 @@ public class ProductDto {
 
     @NotNull(message = "description cannot be null")
     @Size(min = 6, message = "description must be above 6 characters")
-    private String categoryid;
+    private String category;
 
     @NotNull(message = "description cannot be null")
     @Size(min = 6, message = "description must be above 6 characters")

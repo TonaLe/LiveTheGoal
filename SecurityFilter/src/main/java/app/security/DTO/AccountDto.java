@@ -17,7 +17,7 @@ import lombok.*;
 public class AccountDto {
 
     /**
-     * The Username.
+     * The Username. a
      */
     @NotNull(message = "Username cannot be null")
     @Size(min = 6, message = "Username must be above 6 characters")

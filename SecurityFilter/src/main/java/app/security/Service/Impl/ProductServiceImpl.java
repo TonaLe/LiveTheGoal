@@ -1,31 +1,19 @@
 package app.security.Service.Impl;
 
-import app.security.DAO.AccountDAO;
-import app.security.DAO.AccountDetailDAO;
 import app.security.DAO.CategoryDAO;
 import app.security.DAO.ProductDAO;
-import app.security.DTO.AccountDto;
-import app.security.DTO.CategoryDto;
 import app.security.DTO.OffsetBasedPageRequest;
 import app.security.DTO.ProductDto;
-import app.security.Entity.Account;
-import app.security.Entity.AccountDetail;
-import app.security.Entity.Category;
 import app.security.Entity.Product;
-import app.security.Enum.Role;
-import app.security.Service.CategoryService;
 import app.security.Service.ProductService;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

@@ -1,6 +1,5 @@
 package app.security.Entity;
 
-import app.security.Enum.Role;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -45,19 +44,22 @@ public class Product {
     private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "categoryid") // thông qua khóa ngoại categoryid
+    @JoinColumn(name = "categoryId") // thông qua khóa ngoại categoryid
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Category category;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "product")
+    @PrimaryKeyJoinColumn
+    private CartItem cartItem;
 
-    @Column(name = "createdat")
+    @Column(name = "createdAt")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdat;
+    private Date createdAt;
 
-    @Column(name = "modifiedat")
+    @Column(name = "modifiedAt")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedat;
+    private Date modifiedAt;
 }

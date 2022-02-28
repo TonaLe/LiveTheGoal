@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import lombok.*;
 
 /**
- * The type Account dto.
+ * The type Category dto.
  */
 @Builder
 @NoArgsConstructor

@@ -32,15 +32,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
+
     @Override
-    public ProductDto loadProductByname(String name) {
+    public ProductDto loadProductByName(String name) {
         var product = productDAO.loadProductByName(name);
         return convertEntityToDto(product);
     }
 
     @Override
-    public ProductDto loadProductById(int id) {
-        var product = productDAO.loadProductById(id);
+    public ProductDto loadProductBySku(String sku) {
+        var product = productDAO.loadProductBySku(sku);
         return convertEntityToDto(product);
     }
 
@@ -63,10 +64,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProductInfo(int productId, ProductDto productDto) {
-        LOG.info(String.format("Update information for product: %s", productId));
+    public ProductDto updateProductInfo(String name, ProductDto productDto) {
+        LOG.info(String.format("Update information for product: %s", name));
 
-        Product product = productDAO.loadProductById(productId);
+        Product product = productDAO.loadProductByName(name);
         Product productDomain = modelMapper.map(productDto, Product.class);
         if (product != null){
             product.setName(productDomain.getName());
@@ -79,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return convertEntityToDto(productDAO.createOrUpdateProduct(product));
     }
+
 
     @Override
     public void deleteProduct(int id) {

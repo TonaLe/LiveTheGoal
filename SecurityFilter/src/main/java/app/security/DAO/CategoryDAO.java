@@ -8,7 +8,7 @@ import java.util.List;
  * The interface Category dao.
  */
 public interface CategoryDAO {
-    Category findCategoryById(final int id);
-    Category createOrUpdateCategory(final Category category);
+    Category setCategory(final Category category);
+    Category findCategoryByName(final String name);
     List<Category> getAllCategory(final Pageable pageable);
 }

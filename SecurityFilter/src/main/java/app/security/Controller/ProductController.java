@@ -19,7 +19,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/Product")
 public class ProductController {
 
     private final ProductService productService;
@@ -33,13 +33,19 @@ public class ProductController {
         this.errorService = errorService;
     }
 
-    @GetMapping("/Product/{id}")
-    public Response getProductById(@PathVariable String id) {
-        var product = productService.loadProductById(parseInt(id));
+    @GetMapping("/Product/{name}")
+    public Response getProductByName(@PathVariable String name) {
+        var product = productService.loadProductByName(name);
         return Response.status(Response.Status.OK).entity(product).build();
     }
 
-    @GetMapping("/Products")
+    @GetMapping("/Product/{sku}")
+    public Response getProductBySku(@PathVariable String sku) {
+        var product = productService.loadProductBySku(sku);
+        return Response.status(Response.Status.OK).entity(product).build();
+    }
+
+    @GetMapping("/Info")
     public Response getProductList(@RequestParam("limit") int limit,
                                    @RequestParam("offset") int offset) {
         final List<ProductDto> listProduct = productService.getListProduct(limit, offset);
@@ -61,10 +67,10 @@ public class ProductController {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @PutMapping("/Product/{id}")
-    public Response updateProduct(@PathVariable final String id, @RequestBody final ProductDto productDto) {
-        if (productDto == null || id == "") return Response.status(Response.Status.BAD_REQUEST).build();
-        var updatedProduct = productService.updateProductInfo(parseInt(id), productDto);
+    @PutMapping("/Product/{name}")
+    public Response updateProduct(@PathVariable final String name, @RequestBody final ProductDto productDto) {
+        if (productDto == null || name == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        var updatedProduct = productService.updateProductInfo(name, productDto);
 
         if (updatedProduct != null) {
             return Response.status(Response.Status.OK).entity(updatedProduct).build();
@@ -72,10 +78,12 @@ public class ProductController {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @DeleteMapping ("/Product/{id}")
-    public Response deleteProduct(@PathVariable final String id) {
-        if (id == "") return Response.status(Response.Status.BAD_REQUEST).build();
-        productService.deleteProduct(parseInt(id));
+
+
+    @DeleteMapping ("/Product/{name}")
+    public Response deleteProduct(@PathVariable final String name) {
+        if (name == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        productService.deleteProduct(name);
         return Response.status(Response.Status.OK).build();
     }
 }

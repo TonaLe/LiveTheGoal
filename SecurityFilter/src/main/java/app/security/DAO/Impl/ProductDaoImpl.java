@@ -17,10 +17,6 @@ public class ProductDaoImpl implements ProductDAO {
         this.productRepository = productRepository;
     }
 
-    @Override
-    public Product loadProductById(int productId) {
-        return productRepository.findProductById(productId);
-    }
 
     @Override
     public Product createOrUpdateProduct(Product product) {
@@ -29,7 +25,12 @@ public class ProductDaoImpl implements ProductDAO {
 
     @Override
     public Product loadProductByName(String name) {
-        return productRepository.findAccountByName(name);
+        return productRepository.findProductByName(name);
+    }
+
+    @Override
+    public Product loadProductBySku(String sku) {
+        return productRepository.findProductBySku(sku);
     }
 
     @Override

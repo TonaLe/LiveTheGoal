@@ -18,7 +18,7 @@ public class Inventory {
     private int id;
 
     @Column(name = "quantity")
-    private String quantity;
+    private int quantity;
 
     @OneToOne(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
@@ -27,10 +27,10 @@ public class Inventory {
     @Column(name = "createdat")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdat;
+    private Date createdAt;
 
     @Column(name = "modifiedat")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedat;
+    private Date modifiedAt;
 }

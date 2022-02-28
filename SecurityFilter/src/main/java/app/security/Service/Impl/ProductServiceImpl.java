@@ -4,12 +4,15 @@ import app.security.DAO.CategoryDAO;
 import app.security.DAO.ProductDAO;
 import app.security.DTO.OffsetBasedPageRequest;
 import app.security.DTO.ProductDto;
+import app.security.Entity.Brand;
+import app.security.Entity.Inventory;
 import app.security.Entity.Product;
 import app.security.Service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final ProductDAO productDAO;
     private final CategoryDAO categoryDAO;
+
+    @Autowired
     public ProductServiceImpl(ProductDAO productDAO, CategoryDAO categoryDAO) {
         this.modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -49,7 +54,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         Product productDomain = modelMapper.map(productDto, Product.class);
-        return convertEntityToDto(productDAO.createOrUpdateProduct(productDomain));
+        var brand = new Brand();
+        var inventory = new Inventory();
+        brand.setName(productDto.getName());
+        inventory.setQuantity(productDto.getQuantity());
+        productDomain.setBrand(brand);
+        productDomain.setInventory(inventory);
+        return convertEntityToDto(productDAO.setProduct(productDomain));
     }
 
 
@@ -65,31 +76,35 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProductInfo(String name, ProductDto productDto) {
-        LOG.info(String.format("Update information for product: %s", name));
+    public ProductDto updateProductInfo(String sku, ProductDto productDto) {
+        LOG.info(String.format("Update information for product: %s", sku));
 
-        Product product = productDAO.loadProductByName(name);
+        Product product = productDAO.loadProductBySku(sku);
         Product productDomain = modelMapper.map(productDto, Product.class);
+        var categoryInput = productDto.getCategory();
+        var category = this.categoryDAO.findCategoryByName(categoryInput);
         if (product != null){
             product.setName(productDomain.getName());
-            product.setDescribe(productDomain.getDescribe());
+            product.setDescription(productDomain.getDescription());
             product.setSku(productDomain.getSku());
             product.setPrice(productDomain.getPrice());
+            product.setCategory(category);
         }
-        return convertEntityToDto(productDAO.createOrUpdateProduct(product));
+        productDAO.setProduct(product);
+        return productDto;
     }
 
 
     @Override
-    public void deleteProduct(String name) {
-        var product = modelMapper.map(loadProductByName(name), Product.class);
+    public void deleteProduct(String sku) {
+        var product = modelMapper.map(loadProductBySku(sku), Product.class);
         product.setIsavailable(false);
-        productDAO.createOrUpdateProduct(product);
+        productDAO.setProduct(product);
     }
 
     private ProductDto convertEntityToDto(final Product product) {
         ProductDto productDto = modelMapper.map(product, ProductDto.class);
-//        productDto.setCategory(catename); TODO
+        productDto.setCategory(product.getCategory().getName());
         return productDto;
     }
 

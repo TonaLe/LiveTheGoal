@@ -19,7 +19,7 @@ public class ProductDaoImpl implements ProductDAO {
 
 
     @Override
-    public Product createOrUpdateProduct(Product product) {
+    public Product setProduct(Product product) {
         return productRepository.save(product);
     }
 

@@ -22,8 +22,8 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "describe")
-    private String describe;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "price")
     private float price;
@@ -44,7 +44,7 @@ public class Product {
     @JoinColumn(name = "brandid")
     private Brand brand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryid") // thông qua khóa ngoại categoryid
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

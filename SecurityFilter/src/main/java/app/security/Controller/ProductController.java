@@ -33,15 +33,21 @@ public class ProductController {
         this.errorService = errorService;
     }
 
-    @GetMapping("/Product/{name}")
+    @GetMapping("/{name}")
     public Response getProductByName(@PathVariable String name) {
         var product = productService.loadProductByName(name);
+        if (product == null){
+            Response.status(Response.Status.NOT_FOUND).build();
+        }
         return Response.status(Response.Status.OK).entity(product).build();
     }
 
-    @GetMapping("/Product/{sku}")
-    public Response getProductBySku(@PathVariable String sku) {
+    @GetMapping
+    public Response getProductBySku(@RequestParam("sku") String sku) {
         var product = productService.loadProductBySku(sku);
+        if (product == null){
+            Response.status(Response.Status.NOT_FOUND).build();
+        }
         return Response.status(Response.Status.OK).entity(product).build();
     }
 
@@ -56,21 +62,20 @@ public class ProductController {
     }
 
     @SneakyThrows
-    @PostMapping("/AddProduct")
+    @PostMapping
     public Response createProduct(@Valid @RequestBody ProductDto productDto) {
         if (productDto == null) return Response.status(Response.Status.BAD_REQUEST).build();
         var newProduct = productService.createProduct(productDto);
-
         if (newProduct != null) {
             return Response.status(Response.Status.OK).entity(newProduct).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @PutMapping("/Product/{name}")
-    public Response updateProduct(@PathVariable final String name, @RequestBody final ProductDto productDto) {
-        if (productDto == null || name == "") return Response.status(Response.Status.BAD_REQUEST).build();
-        var updatedProduct = productService.updateProductInfo(name, productDto);
+    @PutMapping("/{sku}")
+    public Response updateProduct(@PathVariable final String sku, @RequestBody final ProductDto productDto) {
+        if (productDto == null || sku == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        var updatedProduct = productService.updateProductInfo(sku, productDto);
 
         if (updatedProduct != null) {
             return Response.status(Response.Status.OK).entity(updatedProduct).build();
@@ -80,10 +85,10 @@ public class ProductController {
 
 
 
-    @DeleteMapping ("/Product/{name}")
-    public Response deleteProduct(@PathVariable final String name) {
-        if (name == "") return Response.status(Response.Status.BAD_REQUEST).build();
-        productService.deleteProduct(name);
+    @DeleteMapping ("/{sku}")
+    public Response deleteProduct(@PathVariable final String sku) {
+        if (sku == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        productService.deleteProduct(sku);
         return Response.status(Response.Status.OK).build();
     }
 }

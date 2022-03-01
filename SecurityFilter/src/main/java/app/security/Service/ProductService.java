@@ -15,7 +15,7 @@ public interface ProductService {
 
     List<ProductDto> getListProduct(final int limit, final int offset);
 
-    ProductDto updateProductInfo(final String name, final ProductDto productDto);
+    ProductDto updateProductInfo(final String sku, final ProductDto productDto);
 
-    void deleteProduct(final String name);
+    void deleteProduct(final String sku);
 }

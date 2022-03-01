@@ -21,8 +21,8 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "describe")
-    private String describe;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "price")
     private float price;
@@ -35,12 +35,7 @@ public class Product {
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "inventoryId")
-    private Inventory inventory;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
-    @JoinColumn(name = "brandId")
+    @JoinColumn(name = "brandid")
     private Brand brand;
 
     @ManyToOne
@@ -49,9 +44,8 @@ public class Product {
     @ToString.Exclude
     private Category category;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "product")
-    @PrimaryKeyJoinColumn
-    private CartItem cartItem;
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "createdAt")
     @CreatedDate

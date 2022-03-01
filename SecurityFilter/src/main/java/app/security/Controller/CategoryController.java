@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/Category")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -31,17 +31,26 @@ public class CategoryController {
     }
 
     @SneakyThrows
-    @PostMapping("/add")
+    @PostMapping
     public Response addCategory(@Valid @RequestBody CategoryDto category) {
         if (category == null) return Response.status(Response.Status.BAD_REQUEST).build();
         var data= categoryService.createCategory(category);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity(data).build();
     }
 
     @GetMapping("/")
     public Response getAllCategory(@RequestParam("limit") int limit,
                                             @RequestParam("offset") int offset) {
         var listCategory = categoryService.getListCategory(limit,offset);
-        return Response.status(Response.Status.OK).build() ;
+        return Response.status(Response.Status.OK).entity(listCategory).build() ;
+    }
+
+    @GetMapping("/{name}")
+    public Response getCategoryByName(@PathVariable String name) {
+        var category = categoryService.loadCategoryByName(name);
+        if (category == null){
+            Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.status(Response.Status.OK).entity(category).build();
     }
 }

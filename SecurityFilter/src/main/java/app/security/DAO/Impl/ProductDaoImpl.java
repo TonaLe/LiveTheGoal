@@ -19,10 +19,9 @@ public class ProductDaoImpl implements ProductDAO {
 
 
     @Override
-    public Product createOrUpdateProduct(Product product) {
-        return productRepository.save(product);
+    public Product setProduct(Product product) {
+        return productRepository.saveAndFlush(product);
     }
-
     @Override
     public Product loadProductByName(String name) {
         return productRepository.findProductByName(name);

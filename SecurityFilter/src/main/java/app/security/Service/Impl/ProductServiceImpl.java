@@ -83,14 +83,16 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public void deleteProduct(int id) {
-        var product = modelMapper.map(loadProductById(id), Product.class);
+    public void deleteProduct(final String sku) {
+        Product product = modelMapper.map(productDAO.loadProductBySku(sku), Product.class);
         product.setAvailable(false);
         productDAO.createOrUpdateProduct(product);
     }
 
     private ProductDto convertEntityToDto(final Product product) {
-        return modelMapper.map(product, ProductDto.class);
+        ProductDto productDto =  modelMapper.map(product, ProductDto.class);
+        productDto.setCategory(product.getCategory().getName());
+        return productDto;
     }
 
 }

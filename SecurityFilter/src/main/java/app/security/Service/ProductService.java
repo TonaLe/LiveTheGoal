@@ -17,5 +17,5 @@ public interface ProductService {
 
     ProductDto updateProductInfo(final String name, final ProductDto productDto);
 
-    void deleteProduct(final String name);
+    void deleteProduct(final String sku);
 }

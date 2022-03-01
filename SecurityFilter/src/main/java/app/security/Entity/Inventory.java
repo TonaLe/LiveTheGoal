@@ -18,7 +18,7 @@ public class Inventory {
     private int id;
 
     @Column(name = "quantity")
-    private String quantity;
+    private Integer quantity;
 
     @OneToOne(mappedBy = "inventory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn

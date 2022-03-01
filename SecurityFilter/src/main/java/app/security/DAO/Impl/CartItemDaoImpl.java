@@ -45,4 +45,9 @@ public class CartItemDaoImpl implements CartItemDAO {
         }
         return cartItems;
     }
+
+    @Override
+    public CartItem findCartById(final Integer id) {
+        return cartItemRepository.findCartItemById(id);
+    }
 }

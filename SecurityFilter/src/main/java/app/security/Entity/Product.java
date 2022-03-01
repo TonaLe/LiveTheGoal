@@ -43,7 +43,7 @@ public class Product {
     @JoinColumn(name = "brandId")
     private Brand brand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId") // thông qua khóa ngoại categoryid
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

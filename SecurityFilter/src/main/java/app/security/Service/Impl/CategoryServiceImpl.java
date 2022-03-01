@@ -25,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     public CategoryServiceImpl(final CategoryDAO categoryDAO) {
         this.modelMapper = new ModelMapper();
-        this.categoryDAO = categoryDAO;
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        this.categoryDAO = categoryDAO;
     }
 
     @Override
@@ -46,20 +46,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategory(String name, CategoryDto categoryDto) {
-        LOG.info(String.format("Update information for category: %s", name));
-        Category category = categoryDAO.findCategoryByName(name);
-        Category categoryDomain = modelMapper.map(categoryDto, Category.class);
-        if (category != null){
-            category.setName(categoryDomain.getName());
-        }
-        return convertEntityToDto(categoryDAO.setCategory(category));
+    public CategoryDto loadCategoryByName(String name) {
+        var category = categoryDAO.findCategoryByName(name);
+        return convertEntityToDto(category);
     }
-
 
     private CategoryDto convertEntityToDto(final Category category) {
         CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
-
         return categoryDto;
     }
 }

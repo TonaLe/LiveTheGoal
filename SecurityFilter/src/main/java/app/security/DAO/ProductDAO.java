@@ -11,7 +11,7 @@ import java.util.List;
  * The interface Account dao.
  */
 public interface ProductDAO {
-    Product createOrUpdateProduct(final Product product);
+    Product setProduct(final Product product);
     Product loadProductByName(final String name);
     Product loadProductBySku(final String sku);
     List<Product> findAllProduct(final Pageable pageable);

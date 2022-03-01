@@ -15,27 +15,25 @@ public class ProductDto {
     @Size(min = 6, message = "Product name must be above 6 characters")
     private String name;
 
-    @NotNull(message = "description cannot be null")
-    @Size(min = 6, message = "description must be above 6 characters")
+    @NotNull(message = "Product description cannot be null")
+    @Size(min = 6, message = "Product description must be above 6 characters")
     private String description;
 
-    @NotNull(message = "description cannot be null")
-    @Size(min = 6, message = "description must be above 6 characters")
+    @NotNull(message = "sku cannot be null")
     private String sku;
 
-    @NotNull(message = "description cannot be null")
-    @Size(min = 6, message = "description must be above 6 characters")
+    @NotNull(message = "category cannot be null")
     private String category;
 
-    @NotNull(message = "description cannot be null")
-    @Size(min = 6, message = "description must be above 6 characters")
-    private String quanity;
+    @NotNull(message = "quantity cannot be null")
+    @Size(min = 1, message = "quantity must be above 6 characters")
+    private int quantity;
 
-    @NotNull(message = "description cannot be null")
-    @Size(min = 6, message = "description must be above 6 characters")
-    private String brandName;
+    @NotNull(message = "brandName cannot be null")
+    @Size(min = 6, message = "brandName must be above 6 characters")
+    private String brand;
 
-    @NotNull(message = "description cannot be null")
-    @Size(min = 6, message = "description must be above 6 characters")
-    private String price;
+    @NotNull(message = "price cannot be null")
+    private float price;
+
 }

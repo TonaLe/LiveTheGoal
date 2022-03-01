@@ -36,11 +36,6 @@ public class Product {
 
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "inventoryid")
-    private Inventory inventory;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
     @JoinColumn(name = "brandid")
     private Brand brand;
 
@@ -50,14 +45,16 @@ public class Product {
     @ToString.Exclude
     private Category category;
 
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "createdat")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdat;
+    private Date createdAt;
 
     @Column(name = "modifiedat")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedat;
+    private Date modifiedAt;
 }

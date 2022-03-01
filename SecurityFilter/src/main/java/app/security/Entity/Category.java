@@ -24,15 +24,15 @@ public class Category {
     @Column(name = "createdat")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdat;
+    private Date createdAt;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL) // Quan hệ 1-n (1 category có nhiều product thuộc)
-    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
-    @ToString.Exclude // Khoonhg sử dụng trong toString()
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Collection<Product> products;
 
     @Column(name = "modifiedat")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedat;
+    private Date modifiedAt;
 }

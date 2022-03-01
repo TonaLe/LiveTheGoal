@@ -1,11 +1,11 @@
 package app.security.Service.Impl;
 
+import app.security.DAO.BrandDAO;
 import app.security.DAO.CategoryDAO;
 import app.security.DAO.ProductDAO;
+import app.security.DTO.BrandDto;
 import app.security.DTO.OffsetBasedPageRequest;
 import app.security.DTO.ProductDto;
-import app.security.Entity.Brand;
-import app.security.Entity.Inventory;
 import app.security.Entity.Product;
 import app.security.Service.ProductService;
 import org.modelmapper.ModelMapper;
@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.naming.Name;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,13 +28,15 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final ProductDAO productDAO;
     private final CategoryDAO categoryDAO;
+    private final BrandDAO brandDAO;
 
     @Autowired
-    public ProductServiceImpl(ProductDAO productDAO, CategoryDAO categoryDAO) {
+    public ProductServiceImpl(ProductDAO productDAO, CategoryDAO categoryDAO, BrandDAO brandDAO) {
         this.modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         this.categoryDAO = categoryDAO;
         this.productDAO = productDAO;
+        this.brandDAO = brandDAO;
     }
 
 
@@ -54,13 +56,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         Product productDomain = modelMapper.map(productDto, Product.class);
-        var brand = new Brand();
-        var inventory = new Inventory();
-        brand.setName(productDto.getName());
-        inventory.setQuantity(productDto.getQuantity());
+        //Category
+        var categoryName = productDto.getCategory();
+        var category = this.categoryDAO.findCategoryByName(categoryName);
+        productDomain.setCategory(category);
+        //Brand
+        var brandName = productDto.getBrand();
+        var brand = this.brandDAO.findBrandByName(brandName);
         productDomain.setBrand(brand);
-        productDomain.setInventory(inventory);
-        return convertEntityToDto(productDAO.setProduct(productDomain));
+        //IsActive
+        productDomain.setIsavailable(true);
+        //Add
+        var newProduct = productDAO.setProduct(productDomain);
+        return convertEntityToDto(productDAO.setProduct(newProduct));
     }
 
 
@@ -83,15 +91,21 @@ public class ProductServiceImpl implements ProductService {
         Product productDomain = modelMapper.map(productDto, Product.class);
         var categoryInput = productDto.getCategory();
         var category = this.categoryDAO.findCategoryByName(categoryInput);
+        var brandInput = productDto.getBrand();
+        var brand = this.brandDAO.findBrandByName(brandInput);
         if (product != null){
             product.setName(productDomain.getName());
             product.setDescription(productDomain.getDescription());
-            product.setSku(productDomain.getSku());
             product.setPrice(productDomain.getPrice());
             product.setCategory(category);
+            product.setModifiedAt(new Date());
+            product.setBrand(brand);
+            product.setIsavailable(true);
+            product.setQuantity(productDomain.getQuantity());
+            productDAO.setProduct(product);
+            return productDto;
         }
-        productDAO.setProduct(product);
-        return productDto;
+        return null;
     }
 
 
@@ -105,6 +119,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDto convertEntityToDto(final Product product) {
         ProductDto productDto = modelMapper.map(product, ProductDto.class);
         productDto.setCategory(product.getCategory().getName());
+        productDto.setBrand(product.getBrand().getName());
         return productDto;
     }
 

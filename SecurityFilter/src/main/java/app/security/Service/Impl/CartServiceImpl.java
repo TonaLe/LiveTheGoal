@@ -92,7 +92,7 @@ public class CartServiceImpl implements CartService {
             ShoppingSession shoppingSession = initShoppingCart(account, cartDto.getTotal());
             Product product = productDAO.loadProductBySku(cartDto.getSku());
 
-            if (validateQuantity(product.getInventory().getQuantity(), cartDto.getQuantity())) {
+            if (validateQuantity(product.getQuantity(), cartDto.getQuantity())) {
                 LOG.warn(String.format("Product %s is running out", cartDto.getSku()));
                 return null;
             }
@@ -135,7 +135,8 @@ public class CartServiceImpl implements CartService {
                            final Integer id) {
         LOG.info(String.format("Updating Cart for account: %s", cartDto.getUsername()));
         Product product = productDAO.loadProductBySku(cartDto.getSku());
-        if (product == null || validateQuantity(product.getInventory().getQuantity(), cartDto.getQuantity())) {
+
+        if (product == null || validateQuantity(product.getQuantity(), cartDto.getQuantity())) {
             LOG.warn(String.format("Product %s is running out", cartDto.getSku()));
             return;
         }
@@ -145,8 +146,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCart() {
+    public void deleteCart(final Integer id) {
+        CartItem cartItem = cartItemDAO.findCartById(id);
 
+        if (cartItem == null) {
+            return;
+        }
+        cartItemDAO.removeCart(cartItem);
     }
 
     /**

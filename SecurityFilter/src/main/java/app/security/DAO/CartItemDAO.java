@@ -31,4 +31,11 @@ public interface CartItemDAO {
      * @return the cart item
      */
     CartItem findCartById(final Integer id);
+
+    /**
+     * Remove cart.
+     *
+     * @param cartItem the cart item
+     */
+    void removeCart(final CartItem cartItem);
 }

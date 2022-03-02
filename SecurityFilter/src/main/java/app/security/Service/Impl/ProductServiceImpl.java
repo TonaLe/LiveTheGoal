@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
         var brand = this.brandDAO.findBrandByName(brandName);
         productDomain.setBrand(brand);
         //IsActive
-        productDomain.setIsavailable(true);
+        productDomain.setAvailable(true);
         //Add
         var newProduct = productDAO.setProduct(productDomain);
         return convertEntityToDto(productDAO.setProduct(newProduct));
@@ -100,7 +100,8 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
             product.setModifiedAt(new Date());
             product.setBrand(brand);
-            product.setIsavailable(true);
+            product.setAvailable(true);
+            product.setSku(productDomain.getSku());
             product.setQuantity(productDomain.getQuantity());
             productDAO.setProduct(product);
             return productDto;
@@ -112,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(String sku) {
         var product = modelMapper.map(loadProductBySku(sku), Product.class);
-        product.setIsavailable(false);
+        product.setAvailable(false);
         productDAO.setProduct(product);
     }
 

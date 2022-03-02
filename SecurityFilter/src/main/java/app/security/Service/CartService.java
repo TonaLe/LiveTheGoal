@@ -35,6 +35,8 @@ public interface CartService {
 
     /**
      * Delete cart.
+     *
+     * @param id the id
      */
-    void deleteCart();
+    void deleteCart(final Integer id);
 }

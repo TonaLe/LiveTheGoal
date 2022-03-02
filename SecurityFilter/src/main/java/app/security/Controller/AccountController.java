@@ -36,13 +36,13 @@ public class AccountController {
     @PostMapping("/signup")
     public Response setAccount(@Valid @RequestBody AccountDto account) {
         if (account == null) return Response.status(Response.Status.BAD_REQUEST).build();
-        accountService.setAccount(account);
-
-        final ErrorDto errorDto = errorService.getError(account.getUsername());
+        final ErrorDto errorDto = errorService.getError(account);
 
         if (errorDto != null) {
             return Response.status(Response.Status.BAD_REQUEST).entity(errorDto).build();
         }
+
+        accountService.setAccount(account);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 

@@ -36,7 +36,7 @@ public class Account implements Serializable {
     @Column(name = "msisdn")
     private String msisdn;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "role")

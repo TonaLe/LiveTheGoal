@@ -20,7 +20,7 @@ public class ProductDaoImpl implements ProductDAO {
 
     @Override
     public Product setProduct(Product product) {
-        return productRepository.saveAndFlush(product);
+        return productRepository.save(product);
     }
     @Override
     public Product loadProductByName(String name) {

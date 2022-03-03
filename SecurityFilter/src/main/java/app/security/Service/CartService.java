@@ -13,8 +13,9 @@ public interface CartService {
      * Sets cart.
      *
      * @param cartDto the cart dto
+     * @return the cart
      */
-    void setCart(final CartDto cartDto);
+    Integer setCart(final CartDto cartDto);
 
     /**
      * Find carts by username list.
@@ -28,11 +29,14 @@ public interface CartService {
      * Update cart.
      *
      * @param cartDto the cart dto
+     * @param id      the id
      */
-    void updateCart(final CartDto cartDto);
+    void updateCart(final CartDto cartDto, final Integer id);
 
     /**
      * Delete cart.
+     *
+     * @param id the id
      */
-    void deleteCart();
+    void deleteCart(final Integer id);
 }

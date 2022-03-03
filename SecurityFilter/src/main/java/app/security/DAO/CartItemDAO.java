@@ -23,4 +23,19 @@ public interface CartItemDAO {
      * @return the list
      */
     List<CartItem> findCartItemBySession(final ShoppingSession shoppingSession);
+
+    /**
+     * Find cart by id cart item.
+     *
+     * @param id the id
+     * @return the cart item
+     */
+    CartItem findCartById(final Integer id);
+
+    /**
+     * Remove cart.
+     *
+     * @param cartItem the cart item
+     */
+    void removeCart(final CartItem cartItem);
 }

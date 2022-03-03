@@ -33,12 +33,11 @@ public class Product {
     @Column(name = "isAvailable")
     private boolean isAvailable;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "brandid")
     private Brand brand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId") // thông qua khóa ngoại categoryid
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

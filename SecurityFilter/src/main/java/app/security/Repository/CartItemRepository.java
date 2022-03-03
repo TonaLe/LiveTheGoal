@@ -20,4 +20,12 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer>{
      * @return the list
      */
     List<CartItem> findCartItemByShoppingSession(final ShoppingSession shoppingSession);
+
+    /**
+     * Find cart item by id cart item.
+     *
+     * @param id the id
+     * @return the cart item
+     */
+    CartItem findCartItemById(final int id);
 }

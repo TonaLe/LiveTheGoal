@@ -13,7 +13,7 @@ public interface ProductService {
 
     ProductDto createProduct(final ProductDto product);
 
-    List<ProductDto> getListProduct(final int limit, final int offset);
+    List<ProductDto> getListProduct(final int limit, final int offset, final String sort);
 
     ProductDto updateProductInfo(final String sku, final ProductDto productDto);
 

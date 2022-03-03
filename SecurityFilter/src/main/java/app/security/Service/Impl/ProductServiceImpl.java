@@ -8,6 +8,7 @@ import app.security.DTO.OffsetBasedPageRequest;
 import app.security.DTO.ProductDto;
 import app.security.Entity.Product;
 import app.security.Service.ProductService;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
@@ -73,8 +74,16 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<ProductDto> getListProduct(int limit, int offset) {
-        Pageable pageable =  new OffsetBasedPageRequest(limit, offset, Sort.unsorted());
+    public List<ProductDto> getListProduct(final int limit,
+                                           final int offset,
+                                           final String sort) {
+        Pageable pageable = null;
+
+        if (StringUtils.isBlank(sort)) {
+            pageable =  new OffsetBasedPageRequest(limit, offset, Sort.unsorted());
+        } else {
+            pageable =  new OffsetBasedPageRequest(limit, offset, Sort.by(sort));
+        }
         List<Product> products = productDAO.findAllProduct(pageable);
 
         return products.stream()

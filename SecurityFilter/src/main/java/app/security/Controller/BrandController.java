@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Brand")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BrandController {
     private final BrandService brandService;
     private final ErrorService errorService;

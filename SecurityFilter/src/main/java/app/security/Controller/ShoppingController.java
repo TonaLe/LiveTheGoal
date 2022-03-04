@@ -3,15 +3,13 @@ package app.security.Controller;
 import app.security.DTO.CartDto;
 import app.security.Service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.Response;
 
 @RestController
 @RequestMapping("/shop")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ShoppingController {
 
     private final CartService cartService;

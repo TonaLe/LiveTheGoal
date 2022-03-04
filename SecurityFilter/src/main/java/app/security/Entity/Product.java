@@ -46,6 +46,10 @@ public class Product {
     @Column(name = "quantity")
     private int quantity;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+    @PrimaryKeyJoinColumn
+    private OrderItems orderItems;
+
     @Column(name = "createdAt")
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

@@ -93,6 +93,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> getListProductByCategoryName(String categoryName) {
+        List<Product> products = productDAO.findAllProductByCategoryName(categoryName);
+        return products.stream()
+                .filter(Objects::nonNull)
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public ProductDto updateProductInfo(String sku, ProductDto productDto) {
         LOG.info(String.format("Update information for product: %s", sku));
 
@@ -109,10 +119,10 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
             product.setModifiedAt(new Date());
             product.setBrand(brand);
-            product.setAvailable(true);
-            product.setSku(productDomain.getSku());
             product.setQuantity(productDomain.getQuantity());
+            product.setAvailable(!productDto.getIsDeleted());
             productDAO.setProduct(product);
+            productDto.setSku(product.getSku());
             return productDto;
         }
         return null;
@@ -130,6 +140,7 @@ public class ProductServiceImpl implements ProductService {
         ProductDto productDto = modelMapper.map(product, ProductDto.class);
         productDto.setCategory(product.getCategory().getName());
         productDto.setBrand(product.getBrand().getName());
+        productDto.setIsDeleted(!product.isAvailable());
         return productDto;
     }
 

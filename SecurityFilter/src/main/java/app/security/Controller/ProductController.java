@@ -66,6 +66,11 @@ public class ProductController {
     @PostMapping
     public Response createProduct(@Valid @RequestBody ProductDto productDto) {
         if (productDto == null) return Response.status(Response.Status.BAD_REQUEST).build();
+        final ErrorDto errorDto = errorService.getSkuError(productDto);
+
+        if (errorDto != null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(errorDto).build();
+        }
         var newProduct = productService.createProduct(productDto);
         if (newProduct != null) {
             return Response.status(Response.Status.OK).entity(newProduct).build();
@@ -76,6 +81,7 @@ public class ProductController {
     @PutMapping("/{sku}")
     public Response updateProduct(@PathVariable final String sku, @RequestBody final ProductDto productDto) {
         if (productDto == null || sku == "") return Response.status(Response.Status.BAD_REQUEST).build();
+
         var updatedProduct = productService.updateProductInfo(sku, productDto);
 
         if (updatedProduct != null) {
@@ -84,6 +90,12 @@ public class ProductController {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @GetMapping("/byCategory/{categoryName}")
+    public Response getProductsByCategoryId(@PathVariable final String categoryName) {
+        if (categoryName == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        final List<ProductDto> listProduct = productService.getListProductByCategoryName(categoryName);
+        return Response.status(Response.Status.OK).entity(listProduct).build();
+    }
 
 
     @DeleteMapping ("/{sku}")

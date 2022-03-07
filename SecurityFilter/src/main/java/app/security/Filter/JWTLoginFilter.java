@@ -64,6 +64,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
-        response.sendRedirect("/login");
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 }

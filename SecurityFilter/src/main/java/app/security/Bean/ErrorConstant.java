@@ -55,4 +55,7 @@ public class ErrorConstant {
      * The constant ERROR_MSG_5.
      */
     public static final String ERROR_MSG_5 = "Email already existed";
+
+    public static final String ERROR_ID_6 = "ERROR_6";
+    public static final String ERROR_MSG_6= "This sku already existed";
 }

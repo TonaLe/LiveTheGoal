@@ -20,4 +20,9 @@ public class OrderDaoImpl implements OrderDao {
     public void setOrder(final Order order) {
         orderRepository.save(order);
     }
+
+    @Override
+    public Order getOrderBySku(final String sku) {
+        return null;
+    }
 }

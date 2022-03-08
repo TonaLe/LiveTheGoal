@@ -55,8 +55,9 @@ public class ProductController {
     @GetMapping("/Info")
     public Response getProductList(@RequestParam("limit") int limit,
                                    @RequestParam("offset") int offset,
-                                   @RequestParam("sort") String sort) {
-        final List<ProductDto> listProduct = productService.getListProduct(limit, offset, sort);
+                                   @RequestParam("sort") String sort,
+                                   @RequestParam("type") String typeSort) {
+        final List<ProductDto> listProduct = productService.getListProduct(limit, offset, sort, typeSort);
         if (listProduct.isEmpty()) {
             Response.status(Response.Status.BAD_REQUEST).entity("No Product to be collected").build();
         }

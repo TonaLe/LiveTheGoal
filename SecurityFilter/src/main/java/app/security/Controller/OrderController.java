@@ -23,6 +23,7 @@ public class OrderController {
     public Response addOrder(@RequestBody final OrderDto orderDto) {
         if (orderDto == null) return Response.status(Response.Status.BAD_REQUEST).build();
 
+        if (orderService.validateQuantity(orderDto.getItems()))
         orderService.setOrder(orderDto);
         return Response.status(Response.Status.OK).build();
     }

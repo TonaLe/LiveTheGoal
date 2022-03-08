@@ -76,13 +76,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getListProduct(final int limit,
                                            final int offset,
-                                           final String sort) {
+                                           final String sort,
+                                           final String sortType) {
         Pageable pageable = null;
 
         if (StringUtils.isBlank(sort)) {
             pageable =  new OffsetBasedPageRequest(limit, offset, Sort.unsorted());
         } else {
-            pageable =  new OffsetBasedPageRequest(limit, offset, Sort.by(sort));
+            if (sortType.equals("DESC")) {
+                pageable =  new OffsetBasedPageRequest(limit, offset, Sort.by(sort).descending());
+            } else {
+                pageable =  new OffsetBasedPageRequest(limit, offset, Sort.by(sort).ascending());
+            }
         }
         List<Product> products = productDAO.findAllProduct(pageable);
 

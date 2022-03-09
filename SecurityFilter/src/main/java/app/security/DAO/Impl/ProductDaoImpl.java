@@ -39,6 +39,11 @@ public class ProductDaoImpl implements ProductDAO {
     }
 
     @Override
+    public int getTotalPage(Pageable pageable) {
+        return productRepository.findAll(pageable).getTotalPages();
+    }
+
+    @Override
     public List<Product> findAllProductByCategoryName(String categoryId) {
         return productRepository.findByCategoryNameOrderByCreatedAtDesc(categoryId);
     }

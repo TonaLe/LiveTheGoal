@@ -12,4 +12,6 @@ public interface OrderDao {
      * @param order the order
      */
     void setOrder(final Order order);
+
+    Order getOrderBySku(final String sku);
 }

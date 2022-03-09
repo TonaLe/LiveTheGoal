@@ -93,10 +93,15 @@ public class ProductController {
     }
 
     @GetMapping("/byCategory/{categoryName}")
-    public Response getProductsByCategoryId(@PathVariable final String categoryName) {
-        if (categoryName == "") return Response.status(Response.Status.BAD_REQUEST).build();
-        final List<ProductDto> listProduct = productService.getListProductByCategoryName(categoryName);
-        return Response.status(Response.Status.OK).entity(listProduct).build();
+    public Response getProductsByCategoryId(@PathVariable final String categoryName,
+                                            @RequestParam("limit") int limit,
+                                            @RequestParam("offset") int offset,
+                                            @RequestParam("sort") String sort,
+                                            @RequestParam("type") String typeSort) {
+        if (categoryName.equals("")) return Response.status(Response.Status.BAD_REQUEST).build();
+        final ProductResponse productResponse = productService.getListProductByCategoryName(categoryName,
+                limit, offset, sort, typeSort);
+        return Response.status(Response.Status.OK).entity(productResponse).build();
     }
 
 

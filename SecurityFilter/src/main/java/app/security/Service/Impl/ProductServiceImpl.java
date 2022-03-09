@@ -7,6 +7,7 @@ import app.security.DTO.BrandDto;
 import app.security.DTO.OffsetBasedPageRequest;
 import app.security.DTO.ProductDto;
 import app.security.DTO.ProductResponse;
+import app.security.Entity.Category;
 import app.security.Entity.Product;
 import app.security.Service.ProductService;
 import org.apache.commons.lang3.StringUtils;
@@ -79,17 +80,7 @@ public class ProductServiceImpl implements ProductService {
                                            final int offset,
                                            final String sort,
                                            final String sortType) {
-        Pageable pageable = null;
-
-        if (StringUtils.isBlank(sort)) {
-            pageable =  new OffsetBasedPageRequest(limit, offset, Sort.unsorted());
-        } else {
-            if (sortType.equals("DESC")) {
-                pageable =  new OffsetBasedPageRequest(limit, offset, Sort.by(sort).descending());
-            } else {
-                pageable =  new OffsetBasedPageRequest(limit, offset, Sort.by(sort).ascending());
-            }
-        }
+        Pageable pageable = getPageable(limit, offset, sort, sortType);
         List<Product> products = productDAO.findAllProduct(pageable);
         int totalPage = productDAO.getTotalPage(pageable);
 
@@ -102,12 +93,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getListProductByCategoryName(String categoryName) {
-        List<Product> products = productDAO.findAllProductByCategoryName(categoryName);
-        return products.stream()
+    public ProductResponse getListProductByCategoryName(String categoryName,
+                                                        final int limit,
+                                                        final int offset,
+                                                        final String sort,
+                                                        final String sortType) {
+        Pageable pageable = getPageable(limit, offset, sort, sortType);
+        Category category = categoryDAO.findCategoryByName(categoryName);
+        List<Product> products = productDAO.findAllProductByCategory(category, pageable);
+        List<ProductDto> listProducts = products.stream()
                 .filter(Objects::nonNull)
+                .filter(Product::isAvailable)
                 .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
+
+        int totalPage = productDAO.getTotalPageByCategory(category, pageable);
+        return new ProductResponse(listProducts, totalPage);
     }
 
 
@@ -153,4 +154,17 @@ public class ProductServiceImpl implements ProductService {
         return productDto;
     }
 
+    private Pageable getPageable( final int limit,
+                                  final int offset,
+                                  final String sort,
+                                  final String sortType) {
+        if (StringUtils.isBlank(sort)) {
+            return new OffsetBasedPageRequest(limit, offset, Sort.unsorted());
+        }
+
+        if (sortType.equals("DESC")) {
+            return new OffsetBasedPageRequest(limit, offset, Sort.by(sort).descending());
+        }
+        return new OffsetBasedPageRequest(limit, offset, Sort.by(sort).ascending());
+    }
 }

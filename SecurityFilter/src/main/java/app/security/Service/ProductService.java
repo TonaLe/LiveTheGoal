@@ -16,7 +16,11 @@ public interface ProductService {
 
     ProductResponse getListProduct(final int limit, final int offset, final String sort, final String sortType);
 
-    List<ProductDto> getListProductByCategoryName(final String categoryName);
+    ProductResponse getListProductByCategoryName(final String categoryName,
+                                                 final int limit,
+                                                 final int offset,
+                                                 final String sort,
+                                                 final String sortType);
 
     ProductDto updateProductInfo(final String sku, final ProductDto productDto);
 

@@ -59,7 +59,4 @@ public class Product {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedAt;
-
-    @Transient
-    private int total;
 }

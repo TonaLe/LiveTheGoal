@@ -1,6 +1,7 @@
 package app.security.DAO.Impl;
 
 import app.security.DAO.ProductDAO;
+import app.security.Entity.Category;
 import app.security.Entity.Product;
 import app.security.Repository.ProductRepository;
 import org.springframework.data.domain.Pageable;
@@ -41,4 +42,11 @@ public class ProductDaoImpl implements ProductDAO {
     public int getTotalPage(Pageable pageable) {
         return productRepository.findAll(pageable).getTotalPages();
     }
+
+    @Override
+    public List<Product> findAllProductByCategoryName(String categoryId) {
+        return productRepository.findByCategoryNameOrderByCreatedAtDesc(categoryId);
+    }
+
+
 }

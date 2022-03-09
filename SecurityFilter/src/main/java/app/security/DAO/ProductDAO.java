@@ -1,5 +1,6 @@
 package app.security.DAO;
 
+import app.security.Entity.Category;
 import app.security.Entity.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,4 +17,5 @@ public interface ProductDAO {
     Product loadProductBySku(final String sku);
     List<Product> findAllProduct(final Pageable pageable);
     int getTotalPage(final Pageable pageable);
+    List<Product> findAllProductByCategoryName(final String categoryName);
 }

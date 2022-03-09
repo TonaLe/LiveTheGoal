@@ -15,4 +15,5 @@ public interface ProductDAO {
     Product loadProductByName(final String name);
     Product loadProductBySku(final String sku);
     List<Product> findAllProduct(final Pageable pageable);
+    int getTotalPage(final Pageable pageable);
 }

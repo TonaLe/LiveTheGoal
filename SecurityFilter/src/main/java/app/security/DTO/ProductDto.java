@@ -36,5 +36,7 @@ public class ProductDto {
     @NotNull(message = "price cannot be null")
     private float price;
 
+    private int totalResult;
+
     private Boolean isDeleted;
 }

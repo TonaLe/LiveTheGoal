@@ -6,6 +6,7 @@ import app.security.DAO.ProductDAO;
 import app.security.DTO.BrandDto;
 import app.security.DTO.OffsetBasedPageRequest;
 import app.security.DTO.ProductDto;
+import app.security.DTO.ProductResponse;
 import app.security.Entity.Product;
 import app.security.Service.ProductService;
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<ProductDto> getListProduct(final int limit,
+    public ProductResponse getListProduct(final int limit,
                                            final int offset,
                                            final String sort,
                                            final String sortType) {
@@ -90,11 +91,14 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         List<Product> products = productDAO.findAllProduct(pageable);
+        int totalPage = productDAO.getTotalPage(pageable);
 
-        return products.stream()
+        List<ProductDto> dtoList = products.stream()
                 .filter(Objects::nonNull)
-                .map(this::convertEntityToDto)
+                .map(product -> convertEntityToDto(product))
                 .collect(Collectors.toList());
+
+        return new ProductResponse(dtoList, totalPage);
     }
 
     @Override

@@ -36,4 +36,9 @@ public class ProductDaoImpl implements ProductDAO {
     public List<Product> findAllProduct(Pageable pageable) {
         return productRepository.findAll(pageable).getContent();
     }
+
+    @Override
+    public int getTotalPage(Pageable pageable) {
+        return productRepository.findAll(pageable).getTotalPages();
+    }
 }

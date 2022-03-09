@@ -3,6 +3,7 @@ package app.security.Controller;
 import app.security.DTO.AccountDto;
 import app.security.DTO.ErrorDto;
 import app.security.DTO.ProductDto;
+import app.security.DTO.ProductResponse;
 import app.security.Service.AccountService;
 import app.security.Service.Impl.ErrorService;
 import app.security.Service.ProductService;
@@ -57,11 +58,11 @@ public class ProductController {
                                    @RequestParam("offset") int offset,
                                    @RequestParam("sort") String sort,
                                    @RequestParam("type") String typeSort) {
-        final List<ProductDto> listProduct = productService.getListProduct(limit, offset, sort, typeSort);
-        if (listProduct.isEmpty()) {
+        final ProductResponse response = productService.getListProduct(limit, offset, sort, typeSort);
+        if (response.getListProduct().isEmpty()) {
             Response.status(Response.Status.BAD_REQUEST).entity("No Product to be collected").build();
         }
-        return Response.status(Response.Status.OK).entity(listProduct).build();
+        return Response.status(Response.Status.OK).entity(response).build();
     }
 
     @SneakyThrows
@@ -77,7 +78,7 @@ public class ProductController {
 
     @PutMapping("/{sku}")
     public Response updateProduct(@PathVariable final String sku, @RequestBody final ProductDto productDto) {
-        if (productDto == null || sku == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        if (productDto == null || sku.equals("")) return Response.status(Response.Status.BAD_REQUEST).build();
         var updatedProduct = productService.updateProductInfo(sku, productDto);
 
         if (updatedProduct != null) {
@@ -90,7 +91,7 @@ public class ProductController {
 
     @DeleteMapping ("/{sku}")
     public Response deleteProduct(@PathVariable final String sku) {
-        if (sku == "") return Response.status(Response.Status.BAD_REQUEST).build();
+        if (sku.equals("")) return Response.status(Response.Status.BAD_REQUEST).build();
         productService.deleteProduct(sku);
         return Response.status(Response.Status.OK).build();
     }

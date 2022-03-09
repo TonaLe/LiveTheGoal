@@ -2,6 +2,7 @@ package app.security.Service;
 
 import app.security.DTO.AccountDto;
 import app.security.DTO.ProductDto;
+import app.security.DTO.ProductResponse;
 import app.security.Entity.Product;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface ProductService {
 
     ProductDto createProduct(final ProductDto product);
 
-    List<ProductDto> getListProduct(final int limit, final int offset, final String sort, final String sortType);
+    ProductResponse getListProduct(final int limit, final int offset, final String sort, final String sortType);
 
     ProductDto updateProductInfo(final String sku, final ProductDto productDto);
 

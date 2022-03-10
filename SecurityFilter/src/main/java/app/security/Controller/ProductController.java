@@ -65,6 +65,18 @@ public class ProductController {
         return Response.status(Response.Status.OK).entity(response).build();
     }
 
+    @GetMapping("/Admin/Info")
+    public Response getProductListForAdmin(@RequestParam("limit") int limit,
+                                   @RequestParam("offset") int offset,
+                                   @RequestParam("sort") String sort,
+                                   @RequestParam("type") String typeSort) {
+        final ProductResponse response = productService.getListProductAdmin(limit, offset, sort, typeSort);
+        if (response.getListProduct().isEmpty()) {
+            Response.status(Response.Status.BAD_REQUEST).entity("No Product to be collected").build();
+        }
+        return Response.status(Response.Status.OK).entity(response).build();
+    }
+
     @SneakyThrows
     @PostMapping
     public Response createProduct(@Valid @RequestBody ProductDto productDto) {

@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                .and()
                .authorizeRequests()
                .antMatchers("/signup").permitAll()
-               .antMatchers("/*").hasRole(ADMIN.name())
+               .antMatchers("/Admin/**").hasRole(ADMIN.name())
                .anyRequest()
                .authenticated()
                .and()

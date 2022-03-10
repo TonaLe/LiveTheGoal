@@ -86,7 +86,22 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDto> dtoList = products.stream()
                 .filter(Objects::nonNull)
-                .map(product -> convertEntityToDto(product))
+                .filter(Product::isAvailable)
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        return new ProductResponse(dtoList, totalPage);
+    }
+
+    @Override
+    public ProductResponse getListProductAdmin(final int limit, final int offset, final String sort, final String sortType) {
+        Pageable pageable = getPageable(limit, offset, sort, sortType);
+        List<Product> products = productDAO.findAllProduct(pageable);
+        int totalPage = productDAO.getTotalPage(pageable);
+
+        List<ProductDto> dtoList = products.stream()
+                .filter(Objects::nonNull)
+                .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
 
         return new ProductResponse(dtoList, totalPage);

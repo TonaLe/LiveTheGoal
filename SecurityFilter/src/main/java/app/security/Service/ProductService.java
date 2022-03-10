@@ -16,6 +16,8 @@ public interface ProductService {
 
     ProductResponse getListProduct(final int limit, final int offset, final String sort, final String sortType);
 
+    ProductResponse getListProductAdmin(final int limit, final int offset, final String sort, final String sortType);
+
     ProductResponse getListProductByCategoryName(final String categoryName,
                                                  final int limit,
                                                  final int offset,

@@ -20,6 +20,8 @@ public class ProductDto {
     @Size(min = 6, message = "Product description must be above 6 characters")
     private String description;
 
+    private String pic;
+
     @NotNull(message = "sku cannot be null")
     private String sku;
 

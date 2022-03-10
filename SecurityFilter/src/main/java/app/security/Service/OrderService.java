@@ -1,9 +1,12 @@
 package app.security.Service;
 
 import app.security.DTO.OrderDto;
+import app.security.DTO.ProductDto;
+
+import java.util.List;
 
 public interface OrderService {
     void setOrder(final OrderDto order);
 
-    Boolean validateQuantity(final OrderDto orderDto);
+    List<ProductDto> getOutOfStockProduct(final OrderDto orderDto);
 }

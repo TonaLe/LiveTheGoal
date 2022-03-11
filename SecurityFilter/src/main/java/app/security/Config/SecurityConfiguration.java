@@ -51,13 +51,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                .cors()
                .and()
                .authorizeRequests()
-               .antMatchers("/signup").permitAll()
-               .antMatchers("/Admin/**").hasRole(ADMIN.name())
+               .antMatchers("/").permitAll()
+               .antMatchers("/Product/Admin/**").hasRole(ADMIN.name())
+               .antMatchers("/Account/Admin/**").hasRole(ADMIN.name())
+               .antMatchers("/Order/Admin/**").hasRole(ADMIN.name())
+               .antMatchers("/Category/Admin/**").hasRole(ADMIN.name())
+               .antMatchers("/Category/Admin/**").hasRole(ADMIN.name())
                .anyRequest()
                .authenticated()
                .and()
                .formLogin()
-               .loginPage("/login").permitAll()
+               .permitAll()
                .and()
                .addFilterBefore(new JWTLoginFilter("/",authenticationManager())
                        , UsernamePasswordAuthenticationFilter.class)
@@ -77,6 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public TokenFilter getTokenFilter() throws Exception {
         TokenFilter token = new TokenFilter();
         token.setAuthenticationManager(authenticationManager());
+        token.setFilterProcessesUrl("/");
         return token;
     }
 

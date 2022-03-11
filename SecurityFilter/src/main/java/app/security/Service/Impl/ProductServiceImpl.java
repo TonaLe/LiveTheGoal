@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.util.DateUtil.now;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -145,7 +147,7 @@ public class ProductServiceImpl implements ProductService {
             product.setModifiedAt(new Date());
             product.setBrand(brand);
             product.setQuantity(productDomain.getQuantity());
-            product.setAvailable(!productDto.getIsDeleted());
+            product.setModifiedAt(now());
             productDAO.setProduct(product);
             productDto.setSku(product.getSku());
             return productDto;
@@ -156,7 +158,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(String sku) {
-        var product = modelMapper.map(loadProductBySku(sku), Product.class);
+        var product = productDAO.loadProductBySku(sku);
         product.setAvailable(false);
         productDAO.setProduct(product);
     }

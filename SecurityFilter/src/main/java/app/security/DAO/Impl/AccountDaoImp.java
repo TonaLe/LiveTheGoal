@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Locale;
 
 import static app.security.Enum.UserAuthorities.ADMIN;
 import static app.security.Enum.UserAuthorities.USER;
@@ -63,7 +64,7 @@ public class AccountDaoImp implements AccountDAO {
         if (!username.equals("NONE_PROVIDED")) {
             Account account = accountRepository.findAccountByUsername(username);
             return new ApplicationUser(
-                    account.getRole().equals("Admin") ? ADMIN.getAuthority() : USER.getAuthority(),
+                    account.getRole().getValue().equals("Admin") ? ADMIN.getAuthority() : USER.getAuthority(),
                     account.getUsername(),
                     account.getPassword(),
                     ACCOUNT_NON_EXPIRED,

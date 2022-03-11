@@ -1,6 +1,5 @@
 package app.security.Controller;
 
-import app.security.DTO.ErrorDto;
 import app.security.DTO.OrderDto;
 import app.security.DTO.ProductDto;
 import app.security.Service.OrderService;
@@ -26,11 +25,26 @@ public class OrderController {
     public Response addOrder(@RequestBody final OrderDto orderDto) {
         if (orderDto == null) return Response.status(Response.Status.BAD_REQUEST).build();
 
-        List<ProductDto> outOfStockProduct
-        if (orderService.validateQuantity(orderDto)) {
-            return Response.status(new ErrorDto(10, "")).
+        List<ProductDto> outOfStockProduct = orderService.getOutOfStockProduct(orderDto);
+        if (!outOfStockProduct.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(outOfStockProduct).build();
         }
         orderService.setOrder(orderDto);
         return Response.status(Response.Status.OK).build();
     }
+
+    @GetMapping("/Admin/Info")
+    public Response getOrder(@RequestParam("limit") int limit,
+                             @RequestParam("offset") int offset,
+                             @RequestParam("sort") String sort,
+                             @RequestParam("type") String typeSort) {
+        List<OrderDto> orderDtos = orderService.findAll(limit, offset, sort, typeSort);
+
+        if (orderDtos.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Could not find any orders").build();
+        }
+
+        return Response.status(Response.Status.OK).entity(orderDtos).build();
+    }
+    
 }

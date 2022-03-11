@@ -60,6 +60,6 @@ public class Account implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedAt;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<ShoppingSession> shoppingSessions;
 }

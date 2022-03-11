@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -78,7 +79,7 @@ public class ProductController {
     }
 
     @SneakyThrows
-    @PostMapping
+    @PostMapping("/Admin/add")
     public Response createProduct(@Valid @RequestBody ProductDto productDto) {
         if (productDto == null) return Response.status(Response.Status.BAD_REQUEST).build();
         final ErrorDto errorDto = errorService.getSkuError(productDto);
@@ -93,7 +94,7 @@ public class ProductController {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    @PutMapping("/{sku}")
+    @PutMapping("/Admin/{sku}")
     public Response updateProduct(@PathVariable final String sku, @RequestBody final ProductDto productDto) {
         if (productDto == null || sku.equals("")) return Response.status(Response.Status.BAD_REQUEST).build();
         var updatedProduct = productService.updateProductInfo(sku, productDto);
@@ -117,7 +118,7 @@ public class ProductController {
     }
 
 
-    @DeleteMapping ("/{sku}")
+    @DeleteMapping ("/Admin/{sku}")
     public Response deleteProduct(@PathVariable final String sku) {
         if (sku.equals("")) return Response.status(Response.Status.BAD_REQUEST).build();
         productService.deleteProduct(sku);

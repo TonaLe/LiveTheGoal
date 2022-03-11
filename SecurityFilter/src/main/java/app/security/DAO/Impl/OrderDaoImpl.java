@@ -4,7 +4,10 @@ import app.security.DAO.OrderDao;
 import app.security.Entity.Order;
 import app.security.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class OrderDaoImpl implements OrderDao {
@@ -24,5 +27,15 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Order getOrderBySku(final String sku) {
         return null;
+    }
+
+    @Override
+    public List<Order> findAll(final Pageable pageable) {
+        return orderRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public int getTotalPage(final Pageable pageable) {
+        return orderRepository.findAll(pageable).getTotalPages();
     }
 }

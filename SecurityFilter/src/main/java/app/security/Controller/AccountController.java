@@ -88,7 +88,7 @@ public class AccountController {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    @DeleteMapping("Account/{username}")
+    @DeleteMapping("Account/Admin/{username}")
     public Response deleteAccountInfo(@PathVariable final String username) {
         try {
             accountService.deleteAccount(username);

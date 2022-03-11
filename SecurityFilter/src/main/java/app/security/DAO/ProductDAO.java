@@ -19,4 +19,6 @@ public interface ProductDAO {
     int getTotalPage(final Pageable pageable);
     List<Product> findAllProductByCategory(final Category category, Pageable pageable);
     int getTotalPageByCategory(final Category category, final Pageable pageable);
+    List<Product> findAllProductAdmin(Pageable pageable);
+    int getTotalPageAdmin(Pageable pageable);
 }

@@ -18,7 +18,6 @@ public class ProductDaoImpl implements ProductDAO {
         this.productRepository = productRepository;
     }
 
-
     @Override
     public Product setProduct(Product product) {
         return productRepository.save(product);
@@ -35,11 +34,21 @@ public class ProductDaoImpl implements ProductDAO {
 
     @Override
     public List<Product> findAllProduct(Pageable pageable) {
+        return productRepository.findAllByIsAvailable(true, pageable).getContent();
+    }
+
+    @Override
+    public List<Product> findAllProductAdmin(Pageable pageable) {
         return productRepository.findAll(pageable).getContent();
     }
 
     @Override
     public int getTotalPage(Pageable pageable) {
+        return productRepository.findAllByIsAvailable(true, pageable).getTotalPages();
+    }
+
+    @Override
+    public int getTotalPageAdmin(Pageable pageable) {
         return productRepository.findAll(pageable).getTotalPages();
     }
 

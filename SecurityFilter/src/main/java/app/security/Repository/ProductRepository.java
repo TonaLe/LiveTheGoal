@@ -15,4 +15,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Product findProductBySku(final String sku);
     Page<Product> findAll(final Pageable pageable);
     Page<Product> findAllByCategory(final Category category, Pageable pageable);
+    Page<Product> findAllByIsAvailable(final Boolean isAvailable, final Pageable pageable);
 }

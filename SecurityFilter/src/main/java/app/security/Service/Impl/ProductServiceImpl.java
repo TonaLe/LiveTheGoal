@@ -98,8 +98,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getListProductAdmin(final int limit, final int offset, final String sort, final String sortType) {
         Pageable pageable = getPageable(limit, offset, sort, sortType);
-        List<Product> products = productDAO.findAllProduct(pageable);
-        int totalPage = productDAO.getTotalPage(pageable);
+        List<Product> products = productDAO.findAllProductAdmin(pageable);
+        int totalPage = productDAO.getTotalPageAdmin(pageable);
 
         List<ProductDto> dtoList = products.stream()
                 .filter(Objects::nonNull)

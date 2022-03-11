@@ -24,6 +24,9 @@ public class Product {
     @Column(name = "description")
     private String description;
 
+    @Column(name ="pic")
+    private String picPath;
+
     @Column(name = "price")
     private float price;
 
@@ -54,6 +57,12 @@ public class Product {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
+    @Transient
+    public String getImagePath() {
+        if (this.sku.equals("")) return null;
+        return  "/product-photos/"+this.sku+"/"+this.picPath;
+    }
 
     @Column(name = "modifiedAt")
     @LastModifiedDate

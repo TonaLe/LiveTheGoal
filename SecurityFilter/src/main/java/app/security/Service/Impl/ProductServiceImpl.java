@@ -148,8 +148,10 @@ public class ProductServiceImpl implements ProductService {
             product.setBrand(brand);
             product.setQuantity(productDomain.getQuantity());
             product.setModifiedAt(now());
+            product.setPicPath(productDto.getPic());
             productDAO.setProduct(product);
             productDto.setSku(product.getSku());
+            productDto.setPic(product.getImagePath());
             return productDto;
         }
         return null;
@@ -168,6 +170,7 @@ public class ProductServiceImpl implements ProductService {
         productDto.setCategory(product.getCategory().getName());
         productDto.setBrand(product.getBrand().getName());
         productDto.setIsDeleted(!product.isAvailable());
+        productDto.setPic(product.getImagePath());
         return productDto;
     }
 
